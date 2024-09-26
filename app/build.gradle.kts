@@ -67,8 +67,6 @@ dependencies {
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.constraintlayout.compose)
-    implementation(libs.raamcosta.destination.core)
-    ksp(libs.raamcosta.destination.ksp)
 
     //test
     testImplementation(libs.junit)
@@ -79,11 +77,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.test.manifest)
-
-    //firebase
-    implementation(platform(libs.google.firebase.bom))
-    implementation(libs.google.firebase.auth)
-    implementation(libs.google.firebase.firestore)
 
     //naulian
     implementation(libs.naulian.anhance)
@@ -99,8 +92,4 @@ dependencies {
 
     implementation(libs.codigo.toolsbelt)
     implementation(libs.codigo.toolsbeltui)
-}
-
-ksp {
-    arg("compose-destinations.codeGenPackageName", "com.naulian.compose") // replace package name!
 }

@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            MaterialTheme { 
+            MaterialTheme {
                 val state = rememberLazyListState()
 
                 val scrollIndex by remember {
