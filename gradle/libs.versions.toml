@@ -1,0 +1,75 @@
+[versions]
+activityCompose = "1.9.2"
+anhance = "2024.3.0"
+appcompat = "1.7.0"
+composeBom = "2024.09.02"
+constraintlayoutCompose = "1.0.1"
+destination = "2.0.0-beta01"
+coreKtx = "1.13.1"
+coreSplashscreen = "1.0.1"
+espressoCore = "3.6.1"
+firebaseBom = "33.3.0"
+hiltNavigationCompose = "1.2.0"
+hiltVersion = "2.51.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+kotlinxSerializationJson = "1.7.0"
+destinationKsp = "2.0.0-beta01"
+material = "1.12.0"
+modify = "0.0.2-rc"
+glow = "1.7.0"
+toolsBelt = "0.0.1-preview04"
+toolsBeltUI = "0.0.1-preview01"
+
+# plugin
+kotlin = "2.0.0"
+agp = "8.6.0"
+ksp = "2.0.0-1.0.22"
+hilt = "2.51.1"
+
+
+[libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-graphic = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+google-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+naulian-modify = { module = "com.naulian:modify", version.ref = "modify" }
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-compose-ui-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+raamcosta-destination-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "destination" }
+raamcosta-destination-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "destinationKsp" }
+google-material = { module = "com.google.android.material:material", version.ref = "material" }
+naulian-anhance = { module = "com.naulian:anhance", version.ref = "anhance" }
+naulian-glow = { module = "com.naulian:glow", version.ref = "glow" }
+google-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
+google-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltVersion" }
+google-firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
+google-firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
+
+codigo-toolsbelt = { module = "co.codigo.android:tools-belt", version.ref = "toolsBelt" }
+codigo-toolsbeltui = { module = "co.codigo.android:tools-belt-ui", version.ref = "toolsBeltUI" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+jetbrains-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+
+
+
+
