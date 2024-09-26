@@ -1,7 +1,9 @@
 package com.naulian.compose
 
 import android.app.Application
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -41,14 +43,18 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.naulian.glow_compose.font
 import com.naulian.modify.bold
 import com.naulian.modify.themeStyles
@@ -61,30 +67,40 @@ import kotlin.math.roundToInt
 @HiltAndroidApp
 class App : Application()
 
-val deviceHeightDp @Composable get() = LocalConfiguration.current.screenHeightDp
-val calculatedPx
+val MainActivity.deviceHeightPx
+    @Composable get(): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return windowManager.currentWindowMetrics.bounds.height()
+        }
+
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getRealMetrics(displayMetrics)
+        return displayMetrics.heightPixels
+    }
+
+val MainActivity.calculatedPx
     @Composable get() : Int {
         val px = with(LocalDensity.current) {
-            deviceHeightDp * density
+            calculatedDp.value * density
         }
         return ceil(px).toInt()
     }
-val calculatedDp
+val MainActivity.calculatedDp
     @Composable get() : Dp {
         val dp = with(LocalDensity.current) {
-            calculatedPx / density
+            deviceHeightPx / density
         }
         return floor(dp).dp
     }
 
-fun mapInt2Float(value: Int, b1: Int, b2: Int, c1: Float, c2: Float): Float {
-    if (value > b2) return c2
-    return c1 + (c2 - c1) * (value - b1) / (b2 - b1)
+fun map(x: Int, xMin: Int, xMax: Int, yMin: Float, yMax: Float): Float {
+    if (x > xMax) return yMax
+    return yMin + (yMax - yMin) * (x - xMin) / (xMax - xMin)
 }
 
-fun mapInt2Int(value: Int, b1: Int, b2: Int, c1: Int, c2: Int): Int {
-    if (value > b2) return c2
-    return c1 + (c2 - c1) * (value - b1) / (b2 - b1)
+fun map(x: Int, xMin: Int, xMax: Int, yMin: Int, yMax: Int): Int {
+    if (x > xMax) return yMax
+    return yMin + (yMax - yMin) * (x - xMin) / (xMax - xMin)
 }
 
 private fun Offset.toIntOffset() = IntOffset(x.roundToInt(), y.roundToInt())
@@ -96,30 +112,22 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-
         setContent {
-
-            val itemHeightPx = calculatedPx
-            CheckDensity()
+            val view = LocalView.current
+            WindowCompat.getInsetsController(window, view).apply {
+                hide(WindowInsetsCompat.Type.systemBars())
+                systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
 
             MaterialTheme {
+                CheckDensity()
+                val height = calculatedPx
                 val state = rememberLazyListState()
 
-                val scrollIndex by remember {
+                val offSet by remember {
                     derivedStateOf {
-                        state.firstVisibleItemIndex
-                    }
-                }
-
-                val scrollOffset by remember {
-                    derivedStateOf {
-                        state.firstVisibleItemScrollOffset
-                    }
-                }
-
-                val columnOffset by remember {
-                    derivedStateOf {
-                        (scrollIndex * itemHeightPx) + scrollOffset
+                        (state.firstVisibleItemIndex * height) + state.firstVisibleItemScrollOffset
                     }
                 }
 
@@ -127,42 +135,19 @@ class MainActivity : ComponentActivity() {
                 //==================================================================================
                 val slide1Alpha by remember {
                     derivedStateOf {
-                        val delta = mapInt2Float(
-                            value = columnOffset,
-                            b1 = 0,
-                            b2 = itemHeightPx,
-                            c1 = 1f,
-                            c2 = 0f
-                        )
-                        delta
+                        map(offSet, 0, height, 1f, 0f)
                     }
                 }
 
                 val slide1XLeft by remember {
                     derivedStateOf {
-                        val delta = mapInt2Int(
-                            value = columnOffset,
-                            b1 = 0,
-                            b2 = itemHeightPx,
-                            c1 = 0,
-                            c2 = -1000
-                        )
-
-                        delta
+                        map(offSet, 0, height, 0, -1000)
                     }
                 }
 
                 val slide1XRight by remember {
                     derivedStateOf {
-                        val delta = mapInt2Int(
-                            value = columnOffset,
-                            b1 = 0,
-                            b2 = itemHeightPx,
-                            c1 = 0,
-                            c2 = 1000
-                        )
-
-                        delta
+                        map(offSet, 0, height, 0, 1000)
                     }
                 }
 
@@ -171,61 +156,23 @@ class MainActivity : ComponentActivity() {
 
                 val slide2Alpha by remember {
                     derivedStateOf {
-                        val delta = if (columnOffset <= itemHeightPx) mapInt2Float(
-                            value = columnOffset,
-                            b1 = 0,
-                            b2 = itemHeightPx,
-                            c1 = 0f,
-                            c2 = 1f
-                        ) else mapInt2Float(
-                            value = columnOffset,
-                            b1 = itemHeightPx,
-                            b2 = itemHeightPx * 2,
-                            c1 = 1f,
-                            c2 = 0f
-                        )
-
-                        delta
+                        if (offSet <= height) map(offSet, 0, height, 0f, 1f)
+                        else map(offSet, height, height * 2, 1f, 0f)
                     }
                 }
 
                 val slide2YBack by remember {
                     derivedStateOf {
-                        val delta = if (columnOffset <= itemHeightPx) mapInt2Int(
-                            value = columnOffset,
-                            b1 = 0,
-                            b2 = itemHeightPx,
-                            c1 = 400,
-                            c2 = 0
-                        ) else mapInt2Int(
-                            value = columnOffset,
-                            b1 = itemHeightPx,
-                            b2 = itemHeightPx * 2,
-                            c1 = 0,
-                            c2 = -400
-                        )
-
-                        delta
+                        if (offSet <= height) map(offSet, 0, height, 400, 0)
+                        else map(offSet, height, height * 2, 0, -400)
                     }
                 }
 
                 val slide2Scale by remember {
                     derivedStateOf {
-                        val delta = if (columnOffset <= itemHeightPx) mapInt2Float(
-                            value = columnOffset,
-                            b1 = 0,
-                            b2 = itemHeightPx,
-                            c1 = 0f,
-                            c2 = 1f
-                        ) else mapInt2Float(
-                            value = columnOffset,
-                            b1 = itemHeightPx,
-                            b2 = itemHeightPx * 2,
-                            c1 = 1f,
-                            c2 = 0f
-                        )
-
-                        delta
+                        if (offSet <= height)
+                            map(offSet, 0, height, 0f, 1f)
+                        else map(offSet, height, height * 2, 1f, 0f)
                     }
                 }
 
@@ -234,41 +181,17 @@ class MainActivity : ComponentActivity() {
 
                 val slide3Alpha by remember {
                     derivedStateOf {
-                        val delta = if (columnOffset <= itemHeightPx * 2) mapInt2Float(
-                            value = columnOffset,
-                            b1 = itemHeightPx,
-                            b2 = itemHeightPx * 2,
-                            c1 = 0f,
-                            c2 = 1f
-                        ) else mapInt2Float(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 2,
-                            b2 = itemHeightPx * 3,
-                            c1 = 1f,
-                            c2 = 0f
-                        )
-
-                        delta
+                        if (offSet <= height * 2)
+                            map(offSet, height, height * 2, 0f, 1f)
+                        else map(offSet, height * 2, height * 3, 1f, 0f)
                     }
                 }
 
                 val slide3YBack by remember {
                     derivedStateOf {
-                        val delta = if (columnOffset <= itemHeightPx * 2) mapInt2Int(
-                            value = columnOffset,
-                            b1 = itemHeightPx,
-                            b2 = itemHeightPx * 2,
-                            c1 = 400,
-                            c2 = 0
-                        ) else mapInt2Int(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 2,
-                            b2 = itemHeightPx * 3,
-                            c1 = 0,
-                            c2 = -400
-                        )
-
-                        delta
+                        if (offSet <= height * 2)
+                            map(offSet, height, height * 2, 400, 0)
+                        else map(offSet, height * 2, height * 3, 0, -400)
                     }
                 }
 
@@ -277,56 +200,24 @@ class MainActivity : ComponentActivity() {
 
                 val slide4Alpha by remember {
                     derivedStateOf {
-                        val delta = if (columnOffset <= itemHeightPx * 3) mapInt2Float(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 2,
-                            b2 = itemHeightPx * 3,
-                            c1 = 0f,
-                            c2 = 1f
-                        ) else mapInt2Float(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 3,
-                            b2 = itemHeightPx * 4,
-                            c1 = 1f,
-                            c2 = 0f
-                        )
-
-                        delta
+                        if (offSet <= height * 3)
+                            map(offSet, height * 2, height * 3, 0f, 1f)
+                        else map(offSet, height * 3, height * 4, 1f, 0f)
                     }
                 }
 
                 val slide4YBack by remember {
                     derivedStateOf {
-                        val delta = if (columnOffset <= itemHeightPx * 3) mapInt2Int(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 2,
-                            b2 = itemHeightPx * 3,
-                            c1 = 400,
-                            c2 = 0
-                        ) else mapInt2Int(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 3,
-                            b2 = itemHeightPx * 4,
-                            c1 = 0,
-                            c2 = -400
-                        )
-
-                        delta
+                        if (offSet <= height * 3)
+                            map(offSet, height * 2, height * 3, 400, 0)
+                        else map(offSet, height * 3, height * 4, 0, -400)
                     }
                 }
 
 
                 val slide4XFront by remember {
                     derivedStateOf {
-                        val delta = mapInt2Int(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 2,
-                            b2 = itemHeightPx * 4,
-                            c1 = 2000,
-                            c2 = -2000
-                        )
-
-                        delta
+                        map(offSet, height * 2, height * 4, 2000, -2000)
                     }
                 }
 
@@ -335,56 +226,24 @@ class MainActivity : ComponentActivity() {
 
                 val slide5Alpha by remember {
                     derivedStateOf {
-                        val delta = if (columnOffset <= itemHeightPx * 4) mapInt2Float(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 3,
-                            b2 = itemHeightPx * 4,
-                            c1 = 0f,
-                            c2 = 1f
-                        ) else mapInt2Float(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 4,
-                            b2 = itemHeightPx * 5,
-                            c1 = 1f,
-                            c2 = 0f
-                        )
-
-                        delta
+                        if (offSet <= height * 4)
+                            map(offSet, height * 3, height * 4, 0f, 1f)
+                        else map(offSet, height * 4, height * 5, 1f, 0f)
                     }
                 }
 
                 val slide5YBack by remember {
                     derivedStateOf {
-                        val delta = if (columnOffset <= itemHeightPx * 4) mapInt2Int(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 3,
-                            b2 = itemHeightPx * 4,
-                            c1 = 400,
-                            c2 = 0
-                        ) else mapInt2Int(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 4,
-                            b2 = itemHeightPx * 5,
-                            c1 = 0,
-                            c2 = -400
-                        )
-
-                        delta
+                        if (offSet <= height * 4)
+                            map(offSet, xMin = height * 3, xMax = height * 4, yMin = 400, yMax = 0)
+                        else map(offSet, height * 4, height * 5, 0, -400)
                     }
                 }
 
 
                 val slide5YFront by remember {
                     derivedStateOf {
-                        val delta = mapInt2Int(
-                            value = columnOffset,
-                            b1 = itemHeightPx * 3,
-                            b2 = itemHeightPx * 4,
-                            c1 = -1000,
-                            c2 = 0
-                        )
-
-                        delta
+                        map(offSet, height * 3, height * 4, -1000, 0)
                     }
                 }
 
@@ -419,26 +278,13 @@ class MainActivity : ComponentActivity() {
                 //Slide 1
                 //==================================================================================
 
-                Box(
-                    modifier = Modifier.alpha(slide1Alpha)
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 24.dp)
-                            .offset {
-                                Offset(x = slide1XLeft.toFloat(), y = 0f).toIntOffset()
-                            },
-                        text = "Exploring Iconic Brands: Legacy, Innovation, and Influence",
-                        style = themeStyles.displayMedium.bold(),
-                        fontFamily = font
-                    )
-
-                    TextContent(
-                        modifier = Modifier
-                            .offset {
-                                Offset(x = slide1XRight.toFloat(), y = 0f).toIntOffset()
-                            },
-                        content = """
+                TextContent(
+                    modifier = Modifier
+                        .alpha(slide1Alpha)
+                        .offset {
+                            Offset(x = slide1XRight.toFloat(), y = 0f).toIntOffset()
+                        },
+                    content = """
                             In a world saturated with products and services, certain brands stand
                             out not just for their quality, but for their ability to connect with
                             consumers on a deeper level. These brands have successfully created
@@ -449,8 +295,26 @@ class MainActivity : ComponentActivity() {
                             histories, brand strategies, and the ways they have shaped consumer
                             culture.
                         """.trimIndent(),
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(320.dp)
+                        .padding(24.dp)
+                        .offset {
+                            Offset(x = slide1XLeft.toFloat(), y = 0f).toIntOffset()
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Exploring Iconic Brands: Legacy, Innovation, and Influence",
+                        style = themeStyles.displayMedium.bold(),
+                        fontFamily = font,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
+
 
                 // Slide 2
                 //==================================================================================
@@ -585,10 +449,11 @@ fun LazyListScope.slideContainer(
     content: @Composable BoxScope.() -> Unit = {},
 ) {
     item {
+        val context = (LocalContext.current as MainActivity)
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .height(calculatedDp)
+                .height(context.calculatedDp)
                 .background(background),
             contentAlignment = contentAlignment,
             content = content
@@ -658,7 +523,7 @@ fun rememberMySnapFlingBehavior(
 }
 
 @Composable
-fun CheckDensity() {
+fun MainActivity.CheckDensity() {
     val screenDensity = LocalDensity.current
     println("Density: ${screenDensity.density}")
     println("deviceHeightDp: $calculatedDp")
