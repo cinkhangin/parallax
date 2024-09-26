@@ -85,6 +85,7 @@ val MainActivity.calculatedPx
         }
         return ceil(px).toInt()
     }
+
 val MainActivity.calculatedDp
     @Composable get() : Dp {
         val dp = with(LocalDensity.current) {
@@ -121,7 +122,7 @@ class MainActivity : ComponentActivity() {
             }
 
             MaterialTheme {
-                CheckDensity()
+                // CheckDensity()
                 val height = calculatedPx
                 val state = rememberLazyListState()
 
@@ -153,7 +154,6 @@ class MainActivity : ComponentActivity() {
 
                 //Second Slide
                 //==================================================================================
-
                 val slide2Alpha by remember {
                     derivedStateOf {
                         if (offSet <= height) map(offSet, 0, height, 0f, 1f)
@@ -178,7 +178,6 @@ class MainActivity : ComponentActivity() {
 
                 // Third Slide
                 //==================================================================================
-
                 val slide3Alpha by remember {
                     derivedStateOf {
                         if (offSet <= height * 2)
@@ -197,7 +196,6 @@ class MainActivity : ComponentActivity() {
 
                 // Slide 4
                 //==================================================================================
-
                 val slide4Alpha by remember {
                     derivedStateOf {
                         if (offSet <= height * 3)
@@ -214,7 +212,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-
                 val slide4XFront by remember {
                     derivedStateOf {
                         map(offSet, height * 2, height * 4, 2000, -2000)
@@ -223,7 +220,6 @@ class MainActivity : ComponentActivity() {
 
                 // Slide 4
                 //==================================================================================
-
                 val slide5Alpha by remember {
                     derivedStateOf {
                         if (offSet <= height * 4)
@@ -240,7 +236,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-
                 val slide5YFront by remember {
                     derivedStateOf {
                         map(offSet, height * 3, height * 4, -1000, 0)
@@ -248,9 +243,9 @@ class MainActivity : ComponentActivity() {
                 }
 
                 //==================================================================================
-
-                val snappingLayout =
-                    remember(state) { SnapLayoutInfoProvider(state, SnapPosition.Center) }
+                val snappingLayout = remember(state) {
+                    SnapLayoutInfoProvider(state, SnapPosition.Center)
+                }
                 val snapFlingBehavior = rememberMySnapFlingBehavior(snappingLayout)
 
                 LazyColumn(
@@ -277,7 +272,6 @@ class MainActivity : ComponentActivity() {
 
                 //Slide 1
                 //==================================================================================
-
                 TextContent(
                     modifier = Modifier
                         .alpha(slide1Alpha)
@@ -372,7 +366,6 @@ class MainActivity : ComponentActivity() {
 
                 // Slide 4
                 //==================================================================================
-
                 TextContent(
                     modifier = Modifier
                         .fillMaxSize()
@@ -406,7 +399,6 @@ class MainActivity : ComponentActivity() {
 
                 // Slide 5
                 //==================================================================================
-
                 TextContent(
                     modifier = Modifier
                         .fillMaxSize()
