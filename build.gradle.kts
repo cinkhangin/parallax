@@ -5,4 +5,5 @@ plugins {
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.google.hilt) apply false
     alias(libs.plugins.jetbrains.compose) apply false
+    alias(libs.plugins.android.library) apply false
 }

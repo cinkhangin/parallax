@@ -1,28 +1,18 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.android)
-    alias(libs.plugins.google.ksp)
-    alias(libs.plugins.google.hilt)
     alias(libs.plugins.jetbrains.compose)
 }
 
-val packageName = "com.example.parallax"
-
 android {
-    namespace = packageName
-    compileSdk = 35
+    namespace = "com.naulian.parallax"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = packageName
-        minSdk = 26
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = 23
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -35,11 +25,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
 
     buildFeatures {
@@ -54,11 +44,13 @@ android {
 }
 
 dependencies {
-    //core
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
-    implementation(libs.androidx.core.splashscreen)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 
     //compose
     implementation(platform(libs.androidx.compose.bom))
@@ -79,20 +71,4 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.test.manifest)
-
-    //naulian
-    implementation(libs.naulian.anhance)
-    implementation(libs.naulian.modify)
-    implementation(libs.naulian.glow)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    //hilt
-    implementation(libs.google.hilt.android)
-    ksp(libs.google.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(libs.codigo.toolsbelt)
-    implementation(libs.codigo.toolsbeltui)
-    implementation(project(":parallax"))
 }

@@ -1,26 +1,15 @@
-package com.naulian.parallax
+package com.example.parallax
 
 import android.app.Application
-import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.core.DecayAnimationSpec
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.TargetedFlingBehavior
-import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
-import androidx.compose.foundation.gestures.snapping.SnapPosition
-import androidx.compose.foundation.gestures.snapping.snapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,9 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,18 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -63,65 +44,26 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.naulian.glow_compose.font
 import com.naulian.modify.bold
 import com.naulian.modify.themeStyles
+import com.naulian.parallax.ParallaxColumn
+import com.naulian.parallax.ParallaxLayout
+import com.naulian.parallax.calculatedHeightPx
+import com.naulian.parallax.closedLmap
+import com.naulian.parallax.half
+import com.naulian.parallax.lmap
+import com.naulian.parallax.parallax
+import com.naulian.parallax.rangeTo
+import com.naulian.parallax.rememberCalculation
+import com.naulian.parallax.rememberParallaxColumnState
+import com.naulian.parallax.rememberScrollOffset
+import com.naulian.parallax.scale
+import com.naulian.parallax.smartLmap
+import com.naulian.parallax.xOffSet
+import com.naulian.parallax.yOffSet
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.roundToInt
 
 @HiltAndroidApp
 class App : Application()
-
-val MainActivity.deviceHeightPx
-    @Composable get(): Int {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return windowManager.currentWindowMetrics.bounds.height()
-        }
-
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getRealMetrics(displayMetrics)
-        return displayMetrics.heightPixels
-    }
-
-val MainActivity.calculatedPx
-    @Composable get() : Int {
-        val px = with(LocalDensity.current) {
-            calculatedDp.value * density
-        }
-        return ceil(px).toInt()
-    }
-
-val MainActivity.calculatedDp
-    @Composable get() : Dp {
-        val dp = with(LocalDensity.current) {
-            deviceHeightPx / density
-        }
-        return floor(dp).dp
-    }
-
-//Linear Mapping
-fun lmap(x: Int, xMin: Int, xMax: Int, yMin: Float, yMax: Float): Float {
-    return yMin + (yMax - yMin) * (x - xMin) / (xMax - xMin)
-}
-
-fun closedLmap(x: Int, xMin: Int, xMax: Int, yMin: Float, yMax: Float): Float {
-    if (x > xMax) return yMax
-    if (x < xMin) return yMin
-    return lmap(x, xMin, xMax, yMin, yMax)
-}
-
-fun lmap(x: Int, xMin: Int, xMax: Int, yMin: Int, yMax: Int): Int {
-    if (x > xMax) return yMax
-    return yMin + (yMax - yMin) * (x - xMin) / (xMax - xMin)
-}
-
-fun closedLmap(x: Int, xMin: Int, xMax: Int, yMin: Int, yMax: Int): Int {
-    if (x > xMax) return yMax
-    if (x < xMin) return yMin
-    return lmap(x, xMin, xMax, yMin, yMax)
-}
-
-private fun Offset.toIntOffset() = IntOffset(x.roundToInt(), y.roundToInt())
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -138,210 +80,153 @@ class MainActivity : ComponentActivity() {
                     WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
 
-            MaterialTheme {
-                // CheckDensity()
-                val height = calculatedPx
-                val state = rememberLazyListState()
-
-                val offSet by remember {
-                    derivedStateOf {
-                        (state.firstVisibleItemIndex * height) + state.firstVisibleItemScrollOffset
-                    }
-                }
+            ParallaxLayout {
+                val offSet by rememberScrollOffset(state, height)
                 //Slide 0
                 //==================================================================================
 
-                val slide0Text by remember {
-                    derivedStateOf {
-                        closedLmap(offSet, 1000, height, 0, (height * 0.8f).toInt())
-                    }
+                val slide0Text by rememberCalculation {
+                    closedLmap(offSet, 1000, height, 0, height.scale(80))
                 }
 
-                val slide0level10 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, height/2)
-                    }
+                val slide0level10 by rememberCalculation {
+                    smartLmap(offSet, 0, 0 rangeTo height.half)
+                    //lmap(offSet, 0, height, 0, height / 2)
                 }
-                val slide0level9 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, -(height * 0.2f).toInt())
-                    }
+
+                val slide0level9 by rememberCalculation {
+                    lmap(offSet, 0, height, 0, -(height * 0.2f).toInt())
                 }
-                val slide0level8 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, -(height * 0.3f).toInt())
-                    }
+                val slide0level8 by rememberCalculation {
+                    lmap(offSet, 0, height, 0, -(height * 0.3f).toInt())
                 }
-                val slide0level7 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, -(height * 0.4f).toInt())
-                    }
+
+                val slide0level7 by rememberCalculation {
+                    lmap(offSet, 0, height, 0, -(height * 0.4f).toInt())
                 }
                 val slide0level6 by remember {
                     derivedStateOf {
                         lmap(offSet, 0, height, 0, -(height * 0.5f).toInt())
                     }
                 }
-                val slide0level5 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, -(height * 0.6f).toInt())
-                    }
+                val slide0level5 by rememberCalculation {
+                    lmap(offSet, 0, height, 0, -(height * 0.6f).toInt())
                 }
-                val slide0level4 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, -(height * 0.7f).toInt())
-                    }
+                val slide0level4 by rememberCalculation {
+                    lmap(offSet, 0, height, 0, -(height * 0.7f).toInt())
                 }
-                val slide0level3 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, -(height * 0.8f).toInt())
-                    }
+                val slide0level3 by rememberCalculation {
+                    lmap(offSet, 0, height, 0, -(height * 0.8f).toInt())
                 }
-                val slide0level2 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, -(height * 0.9f).toInt())
-                    }
+                val slide0level2 by rememberCalculation {
+                    lmap(offSet, 0, height, 0, -(height * 0.9f).toInt())
                 }
 
-                val slide0level1 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, -(height * 1f).toInt())
-                    }
+                val slide0level1 by rememberCalculation {
+                    lmap(offSet, 0, height, 0, -(height * 1f).toInt())
                 }
 
-                val slide0Alpha by remember {
-                    derivedStateOf {
-                        closedLmap(offSet, 0, height, 0f, 1f)
-                    }
+                val slide0Alpha by rememberCalculation {
+                    closedLmap(offSet, 0, height, 0f, 1f)
                 }
 
                 //Slide 1
                 //==================================================================================
-                val slide1Text by remember {
-                    derivedStateOf {
-                        lmap(offSet, 1000, height, -2400, 0)
-                    }
+                val slide1Text by rememberCalculation {
+                    lmap(offSet, 1000, height, -2400, 0)
                 }
 
-                val slide1Alpha by remember {
-                    derivedStateOf {
-                        closedLmap(offSet, height * 2, height * 3, 1f, 0f)
-                    }
+                val slide1Alpha by rememberCalculation {
+                    closedLmap(offSet, height * 2, height * 3, 1f, 0f)
                 }
 
-                val slide1XLeft by remember {
-                    derivedStateOf {
-                        lmap(offSet, height * 2, height * 3, 0, -1200)
-                    }
+                val slide1XLeft by rememberCalculation {
+                    lmap(offSet, height * 2, height * 3, 0, -1200)
                 }
 
-                val slide1XRight by remember {
-                    derivedStateOf {
-                        lmap(offSet, height * 2, height * 3, 0, 1200)
-                    }
+                val slide1XRight by rememberCalculation {
+                    lmap(offSet, height * 2, height * 3, 0, 1200)
                 }
 
                 //Slide 2
                 //==================================================================================
-                val slide2Alpha by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 3) closedLmap(offSet, height * 2, height * 3, 0f, 1f)
-                        else closedLmap(offSet, height * 3, height * 4, 1f, 0f)
-                    }
+                val slide2Alpha by rememberCalculation {
+                    if (offSet <= height * 3) closedLmap(offSet, height * 2, height * 3, 0f, 1f)
+                    else closedLmap(offSet, height * 3, height * 4, 1f, 0f)
                 }
 
-                val slide2YBack by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 3) lmap(offSet, height * 2, height * 3, -1600, 0)
-                        else lmap(offSet, height * 3, height * 4, 0, 1600)
-                    }
+                val slide2YBack by rememberCalculation {
+                    smartLmap(
+                        offset = offSet,
+                        index = 3,
+                        outRange = 0 rangeTo  1600,
+                        exitOutRange = -1600 rangeTo 0
+                    )
+                   /* if (offSet <= height * 3) lmap(offSet, height * 2, height * 3, -1600, 0)
+                    else lmap(offSet, height * 3, height * 4, 0, 1600)*/
                 }
 
-                val slide2Scale by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 3)
-                            closedLmap(offSet, height * 2, height * 3, 0f, 1f)
-                        else closedLmap(offSet, height * 3, height * 4, 1f, 0f)
-                    }
+                val slide2Scale by rememberCalculation {
+                    if (offSet <= height * 3)
+                        closedLmap(offSet, height * 2, height * 3, 0f, 1f)
+                    else closedLmap(offSet, height * 3, height * 4, 1f, 0f)
                 }
 
                 // Slide 3
                 //==================================================================================
-                val slide3Alpha by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 4)
-                            closedLmap(offSet, height * 3, height * 4, 0f, 1f)
-                        else closedLmap(offSet, height * 4, height * 5, 1f, 0f)
-                    }
+                val slide3Alpha by rememberCalculation {
+                    if (offSet <= height * 4)
+                        closedLmap(offSet, height * 3, height * 4, 0f, 1f)
+                    else closedLmap(offSet, height * 4, height * 5, 1f, 0f)
                 }
 
-                val slide3Rotate by remember {
-                    derivedStateOf {
-                        closedMap(offSet, height * 3, height * 4, 180, 0) % 360f
-                    }
+                val slide3Rotate by rememberCalculation {
+                    closedLmap(offSet, height * 3, height * 4, 180, 0) % 360f
                 }
 
-                val slide3YText by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 4)
-                            lmap(offSet, height * 3, height * 4, -1600, 0)
-                        else lmap(offSet, height * 4, height * 5, 0, 1600)
-                    }
+                val slide3YText by rememberCalculation {
+                    if (offSet <= height * 4)
+                        lmap(offSet, height * 3, height * 4, -1600, 0)
+                    else lmap(offSet, height * 4, height * 5, 0, 1600)
                 }
 
                 // Slide 4
                 //==================================================================================
-                val slide4Alpha by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 5)
-                            closedLmap(offSet, height * 4, height * 5, 0f, 1f)
-                        else closedLmap(offSet, height * 5, height * 6, 1f, 0f)
-                    }
+                val slide4Alpha by rememberCalculation {
+                    if (offSet <= height * 5)
+                        closedLmap(offSet, height * 4, height * 5, 0f, 1f)
+                    else closedLmap(offSet, height * 5, height * 6, 1f, 0f)
                 }
 
-                val slide4YBack by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 5)
-                            lmap(offSet, height * 4, height * 5, -1600, 0)
-                        else lmap(offSet, height * 5, height * 6, 0, 1600)
-                    }
+                val slide4YBack by rememberCalculation {
+                    if (offSet <= height * 5)
+                        lmap(offSet, height * 4, height * 5, -1600, 0)
+                    else lmap(offSet, height * 5, height * 6, 0, 1600)
                 }
 
-                val slide4XFront by remember {
-                    derivedStateOf {
-                        lmap(offSet, height * 4, height * 6, 2000, -2000)
-                    }
+                val slide4XFront by rememberCalculation {
+                    lmap(offSet, height * 4, height * 6, 2000, -2000)
                 }
 
                 // Slide 5
                 //==================================================================================
-                val slide5Alpha by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 6)
-                            closedLmap(offSet, height * 5, height * 6, 0f, 1f)
-                        else closedLmap(offSet, height * 6, height * 7, 1f, 0f)
-                    }
+                val slide5Alpha by rememberCalculation {
+                    if (offSet <= height * 6)
+                        closedLmap(offSet, height * 5, height * 6, 0f, 1f)
+                    else closedLmap(offSet, height * 6, height * 7, 1f, 0f)
                 }
 
-                val slide5YBack by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 6)
-                            lmap(offSet, height * 5, height * 6, -1600, 0)
-                        else lmap(offSet, height * 6, height * 7, 0, 1600)
-                    }
+                val slide5YBack by rememberCalculation {
+                    if (offSet <= height * 6)
+                        lmap(offSet, height * 5, height * 6, -1600, 0)
+                    else lmap(offSet, height * 6, height * 7, 0, 1600)
                 }
 
-                val slide5YFront by remember {
-                    derivedStateOf {
-                        lmap(offSet, height * 5, height * 6, -1000, 0)
-                    }
+                val slide5YFront by rememberCalculation {
+                    lmap(offSet, height * 5, height * 6, -1000, 0)
                 }
 
                 //==================================================================================
-                val snappingLayout = remember(state) {
-                    SnapLayoutInfoProvider(state, SnapPosition.Center)
-                }
-                val snapFlingBehavior = rememberMySnapFlingBehavior(snappingLayout)
 
                 Box(
                     modifier = Modifier
@@ -353,34 +238,26 @@ class MainActivity : ComponentActivity() {
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level10.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level10) },
                         drawable = R.drawable.bg_level10
                     )
 
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level9.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level9) },
                         drawable = R.drawable.bg_level9
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level8.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level8) },
                         drawable = R.drawable.bg_level8
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level7.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level7) },
                         drawable = R.drawable.bg_level7
                     )
 
@@ -388,9 +265,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(vertical = 120.dp)
-                            .offset {
-                                Offset(x = 0f, y = slide0Text.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0Text) },
                         text = "PARALLAX",
                         fontFamily = font,
                         fontWeight = FontWeight.Bold,
@@ -402,49 +277,37 @@ class MainActivity : ComponentActivity() {
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level6.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level6) },
                         drawable = R.drawable.bg_level6
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level5.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level5) },
                         drawable = R.drawable.bg_level5
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level4.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level4) },
                         drawable = R.drawable.bg_level4
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level3.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level3) },
                         drawable = R.drawable.bg_level3
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level2.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level2) },
                         drawable = R.drawable.bg_level2
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset {
-                                Offset(x = 0f, y = slide0level1.toFloat()).toIntOffset()
-                            },
+                            .offset { yOffSet(slide0level1) },
                         drawable = R.drawable.bg_level1
                     )
 
@@ -456,19 +319,14 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                LazyColumn(
-                    state = state,
-                    flingBehavior = snapFlingBehavior
-                ) {
-                    slideContainer(background = Color.Transparent)
-                    slideContainer(background = Color.Black) {
+                ParallaxColumn {
+                    parallax(background = Color.Transparent)
+                    parallax(background = Color.Black) {
                         Text(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(vertical = 120.dp)
-                                .offset {
-                                    Offset(x = 0f, y = slide1Text.toFloat()).toIntOffset()
-                                },
+                                .offset { yOffSet(slide1Text) },
                             text = "PARALLAX",
                             fontFamily = font,
                             fontWeight = FontWeight.Bold,
@@ -494,15 +352,13 @@ class MainActivity : ComponentActivity() {
                             textColor = Color.White
                         )
                     }
-                    slideContainer(background = Color.White)
-                    slideContainer(background = Color.Black) {
+                    parallax(background = Color.White)
+                    parallax(background = Color.Black) {
                         TextContent(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .alpha(slide2Alpha)
-                                .offset {
-                                    Offset(x = 0f, y = slide2YBack.toFloat()).toIntOffset()
-                                },
+                                .offset { yOffSet(slide2YBack) },
                             content = """
                                 Apple Inc., founded in 1976 by Steve Jobs, Steve Wozniak, and Ronald Wayne,
                                 is a global technology company known for its innovative products and
@@ -518,7 +374,7 @@ class MainActivity : ComponentActivity() {
                             textColor = Color.White
                         )
                     }
-                    slideContainer(
+                    parallax(
                         background = Color.White,
                         contentAlignment = Alignment.TopCenter
                     ) {
@@ -526,9 +382,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .alpha(slide3Alpha)
-                                .offset {
-                                    Offset(x = 0f, y = slide3YText.toFloat()).toIntOffset()
-                                },
+                                .offset { yOffSet(y = slide3YText) },
                             content = """
                                 Nike, founded in 1964 by Bill Bowerman and Phil Knight as Blue Ribbon
                                 Sports, has grown into a global leader in athletic footwear, apparel, and
@@ -552,14 +406,12 @@ class MainActivity : ComponentActivity() {
                             contentDescription = null
                         )
                     }
-                    slideContainer(background = Color(0xFFF40009)) {
+                    parallax(background = Color(0xFFF40009)) {
                         TextContent(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .alpha(slide4Alpha)
-                                .offset {
-                                    Offset(x = 0f, y = slide4YBack.toFloat()).toIntOffset()
-                                },
+                                .offset { yOffSet(slide4YBack) },
                             content = """
                                 Coca-Cola, created in 1886 by pharmacist Dr. John Stith Pemberton, is one
                                 of the world’s most iconic and recognizable beverage brands. Originally
@@ -575,14 +427,12 @@ class MainActivity : ComponentActivity() {
                             textColor = Color.White
                         )
                     }
-                    slideContainer(background = Color.White) {
+                    parallax(background = Color.White) {
                         TextContent(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .alpha(slide5Alpha)
-                                .offset {
-                                    Offset(x = 0f, y = slide5YBack.toFloat()).toIntOffset()
-                                },
+                                .offset { yOffSet(slide5YBack) },
                             content = """
                                 Tesla, founded in 2003 by engineers Martin Eberhard and Marc Tarpenning,
                                 with Elon Musk joining shortly after, is a trailblazer in the electric
@@ -607,9 +457,7 @@ class MainActivity : ComponentActivity() {
                 TextContent(
                     modifier = Modifier
                         .alpha(slide1Alpha)
-                        .offset {
-                            Offset(x = slide1XRight.toFloat(), y = 0f).toIntOffset()
-                        },
+                        .offset { xOffSet(slide1XRight) },
                     content = """
                             In a world saturated with products and services, certain brands stand
                             out not just for their quality, but for their ability to connect with
@@ -628,9 +476,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxWidth()
                         .height(320.dp)
                         .padding(24.dp)
-                        .offset {
-                            Offset(x = slide1XLeft.toFloat(), y = 0f).toIntOffset()
-                        },
+                        .offset { xOffSet(slide1XLeft) },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -663,9 +509,7 @@ class MainActivity : ComponentActivity() {
                     logo = R.drawable.ic_cocacola,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .offset {
-                            Offset(x = slide4XFront.toFloat(), y = 0f).toIntOffset()
-                        },
+                        .offset { xOffSet(slide4XFront) },
                 )
 
                 // Slide 5
@@ -674,32 +518,10 @@ class MainActivity : ComponentActivity() {
                     logo = R.drawable.ic_tesla,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .offset {
-                            Offset(x = 0f, y = slide5YFront.toFloat()).toIntOffset()
-                        },
+                        .offset { yOffSet(slide5YFront) },
                 )
             }
         }
-    }
-}
-
-
-fun LazyListScope.slideContainer(
-    modifier: Modifier = Modifier,
-    background: Color,
-    contentAlignment: Alignment = Alignment.TopStart,
-    content: @Composable BoxScope.() -> Unit = {},
-) {
-    item {
-        val context = (LocalContext.current as MainActivity)
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .height(context.calculatedDp)
-                .background(background),
-            contentAlignment = contentAlignment,
-            content = content
-        )
     }
 }
 
@@ -747,25 +569,6 @@ fun LogoContent(modifier: Modifier = Modifier, @DrawableRes logo: Int) {
 val String.asParagraph get() = trimIndent().replace("\n", " ")
 
 @Composable
-fun rememberMySnapFlingBehavior(
-    snapLayoutInfoProvider: SnapLayoutInfoProvider,
-): TargetedFlingBehavior {
-    val density = LocalDensity.current
-    val highVelocityApproachSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay()
-    return remember(
-        snapLayoutInfoProvider,
-        highVelocityApproachSpec,
-        density
-    ) {
-        snapFlingBehavior(
-            snapLayoutInfoProvider = snapLayoutInfoProvider,
-            decayAnimationSpec = highVelocityApproachSpec,
-            snapAnimationSpec = spring(stiffness = Spring.StiffnessLow)
-        )
-    }
-}
-
-@Composable
 fun VectorImage(modifier: Modifier = Modifier, @DrawableRes drawable: Int) {
     Image(
         modifier = modifier
@@ -774,30 +577,6 @@ fun VectorImage(modifier: Modifier = Modifier, @DrawableRes drawable: Int) {
         contentScale = ContentScale.FillWidth,
         contentDescription = null
     )
-}
-
-@Composable
-fun MainActivity.CheckDensity() {
-    val screenDensity = LocalDensity.current
-    println("Density: ${screenDensity.density}")
-    println("deviceHeightDp: $calculatedDp")
-    println("deviceHeightPx: $calculatedPx")
-}
-
-fun openedMap(x: Int, xMin: Int, xMax: Int, yMin: Int, yMax: Int): Int {
-    return ((yMax - yMin) * (x - xMin)) / (xMax - xMin) + yMin
-}
-
-fun closedMap(x: Int, xMin: Int, xMax: Int, yMin: Int, yMax: Int): Int {
-    if (x < xMin) return yMin
-    if (x > xMax) return yMax
-    return ((yMax - yMin) * (x - xMin)) / (xMax - xMin) + yMin
-}
-
-
-fun main() {
-    val y = openedMap(0, 10, 20, -20, 30)
-    println(y)
 }
 
 

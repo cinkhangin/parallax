@@ -2,6 +2,9 @@
 
 import java.util.Properties
 
+include(":parallax")
+
+
 val localPropertiesFile = file("local.properties")
 val localProperties = Properties()
 
