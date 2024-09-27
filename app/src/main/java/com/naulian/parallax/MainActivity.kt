@@ -43,14 +43,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -60,6 +65,7 @@ import com.naulian.modify.bold
 import com.naulian.modify.themeStyles
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
+import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.roundToInt
@@ -96,6 +102,7 @@ val MainActivity.calculatedDp
 
 fun map(x: Int, xMin: Int, xMax: Int, yMin: Float, yMax: Float): Float {
     if (x > xMax) return yMax
+    if (x < xMin) return yMin
     return yMin + (yMax - yMin) * (x - xMin) / (xMax - xMin)
 }
 
@@ -131,72 +138,110 @@ class MainActivity : ComponentActivity() {
                         (state.firstVisibleItemIndex * height) + state.firstVisibleItemScrollOffset
                     }
                 }
-
-                //FirstSlide
+                //Slide 0
                 //==================================================================================
-                val slide1Alpha by remember {
-                    derivedStateOf {
-                        map(offSet, 0, height, 1f, 0f)
-                    }
-                }
 
-                val slide1XLeft by remember {
-                    derivedStateOf {
-                        map(offSet, 0, height, 0, -1000)
-                    }
-                }
-
-                val slide1XRight by remember {
+                val slide0Text by remember {
                     derivedStateOf {
                         map(offSet, 0, height, 0, 1000)
                     }
                 }
 
-                //Second Slide
+                val slide0level10 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -200)
+                    }
+                }
+                val slide0level9 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -400)
+                    }
+                }
+                val slide0level8 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -600)
+                    }
+                }
+                val slide0level7 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -800)
+                    }
+                }
+                val slide0level6 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -1000)
+                    }
+                }
+                val slide0level5 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -1200)
+                    }
+                }
+                val slide0level4 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -1400)
+                    }
+                }
+                val slide0level3 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -1700)
+                    }
+                }
+                val slide0level2 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -2000)
+                    }
+                }
+
+                val slide0level1 by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0, -2400)
+                    }
+                }
+
+                val slide0Alpha by remember {
+                    derivedStateOf {
+                        map(offSet, 0, height, 0f, 1f)
+                    }
+                }
+
+                //Slide 1
+                //==================================================================================
+                val slide1Alpha by remember {
+                    derivedStateOf {
+                        map(offSet, height * 2, height * 3, 1f, 0f)
+                    }
+                }
+
+                val slide1XLeft by remember {
+                    derivedStateOf {
+                        map(offSet, height * 2, height * 3, 0, -1200)
+                    }
+                }
+
+                val slide1XRight by remember {
+                    derivedStateOf {
+                        map(offSet, height * 2, height * 3, 0, 1200)
+                    }
+                }
+
+                //Slide 2
                 //==================================================================================
                 val slide2Alpha by remember {
                     derivedStateOf {
-                        if (offSet <= height) map(offSet, 0, height, 0f, 1f)
-                        else map(offSet, height, height * 2, 1f, 0f)
+                        if (offSet <= height * 3) map(offSet, height * 2, height * 3, 0f, 1f)
+                        else map(offSet, height * 3, height * 4, 1f, 0f)
                     }
                 }
 
                 val slide2YBack by remember {
                     derivedStateOf {
-                        if (offSet <= height) map(offSet, 0, height, 400, 0)
-                        else map(offSet, height, height * 2, 0, -400)
+                        if (offSet <= height * 3) map(offSet, height * 2, height * 3, 400, 0)
+                        else map(offSet, height * 3, height * 4, 0, -400)
                     }
                 }
 
                 val slide2Scale by remember {
-                    derivedStateOf {
-                        if (offSet <= height)
-                            map(offSet, 0, height, 0f, 1f)
-                        else map(offSet, height, height * 2, 1f, 0f)
-                    }
-                }
-
-                // Third Slide
-                //==================================================================================
-                val slide3Alpha by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 2)
-                            map(offSet, height, height * 2, 0f, 1f)
-                        else map(offSet, height * 2, height * 3, 1f, 0f)
-                    }
-                }
-
-                val slide3YBack by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 2)
-                            map(offSet, height, height * 2, 400, 0)
-                        else map(offSet, height * 2, height * 3, 0, -400)
-                    }
-                }
-
-                // Slide 4
-                //==================================================================================
-                val slide4Alpha by remember {
                     derivedStateOf {
                         if (offSet <= height * 3)
                             map(offSet, height * 2, height * 3, 0f, 1f)
@@ -204,23 +249,9 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                val slide4YBack by remember {
-                    derivedStateOf {
-                        if (offSet <= height * 3)
-                            map(offSet, height * 2, height * 3, 400, 0)
-                        else map(offSet, height * 3, height * 4, 0, -400)
-                    }
-                }
-
-                val slide4XFront by remember {
-                    derivedStateOf {
-                        map(offSet, height * 2, height * 4, 2000, -2000)
-                    }
-                }
-
-                // Slide 4
+                // Slide 3
                 //==================================================================================
-                val slide5Alpha by remember {
+                val slide3Alpha by remember {
                     derivedStateOf {
                         if (offSet <= height * 4)
                             map(offSet, height * 3, height * 4, 0f, 1f)
@@ -228,17 +259,59 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                val slide5YBack by remember {
+                val slide3YBack by remember {
                     derivedStateOf {
                         if (offSet <= height * 4)
-                            map(offSet, xMin = height * 3, xMax = height * 4, yMin = 400, yMax = 0)
+                            map(offSet, height * 3, height * 4, 400, 0)
                         else map(offSet, height * 4, height * 5, 0, -400)
+                    }
+                }
+
+                // Slide 4
+                //==================================================================================
+                val slide4Alpha by remember {
+                    derivedStateOf {
+                        if (offSet <= height * 5)
+                            map(offSet, height * 4, height * 5, 0f, 1f)
+                        else map(offSet, height * 3, height * 6, 1f, 0f)
+                    }
+                }
+
+                val slide4YBack by remember {
+                    derivedStateOf {
+                        if (offSet <= height * 5)
+                            map(offSet, height * 4, height * 5, 400, 0)
+                        else map(offSet, height * 5, height * 6, 0, -400)
+                    }
+                }
+
+                val slide4XFront by remember {
+                    derivedStateOf {
+                        map(offSet, height * 4, height * 6, 2000, -2000)
+                    }
+                }
+
+                // Slide 5
+                //==================================================================================
+                val slide5Alpha by remember {
+                    derivedStateOf {
+                        if (offSet <= height * 6)
+                            map(offSet, height * 5, height * 6, 0f, 1f)
+                        else map(offSet, height * 6, height * 7, 1f, 0f)
+                    }
+                }
+
+                val slide5YBack by remember {
+                    derivedStateOf {
+                        if (offSet <= height * 6)
+                            map(offSet, xMin = height * 5, xMax = height * 6, yMin = 400, yMax = 0)
+                        else map(offSet, height * 6, height * 7, 0, -400)
                     }
                 }
 
                 val slide5YFront by remember {
                     derivedStateOf {
-                        map(offSet, height * 3, height * 4, -1000, 0)
+                        map(offSet, height * 5, height * 6, -1000, 0)
                     }
                 }
 
@@ -248,10 +321,134 @@ class MainActivity : ComponentActivity() {
                 }
                 val snapFlingBehavior = rememberMySnapFlingBehavior(snappingLayout)
 
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFEDC2A0)),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level10.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level10
+                    )
+
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level9.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level9
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level8.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level8
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level7.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level7
+                    )
+
+                    Text(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(vertical = 200.dp)
+                            .offset {
+                                Offset(x = 0f, y = slide0Text.toFloat()).toIntOffset()
+                            },
+                        text = "PARALLAX",
+                        fontFamily = font,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        fontSize = 64.sp,
+                        color = Color.White
+                    )
+
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level6.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level6
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level5.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level5
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level4.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level4
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level3.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level3
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level2.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level2
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                Offset(x = 0f, y = slide0level1.toFloat()).toIntOffset()
+                            },
+                        drawable = R.drawable.bg_level1
+                    )
+                }
+
                 LazyColumn(
                     state = state,
                     flingBehavior = snapFlingBehavior
                 ) {
+                    slideContainer(background = Color.Transparent)
+                    slideContainer(background = Color.Black){
+                        TextContent(
+                            modifier = Modifier
+                                .alpha(slide0Alpha),
+                            content = """
+                                Parallax is the apparent shift in the position of an object when
+                                observed from different viewpoints. This effect occurs because an
+                                object's position appears to change relative to its background depending
+                                on the observer's angle or position. Parallax is often used in astronomy
+                                to measure the distance of stars from Earth by observing their movement
+                                against more distant celestial bodies. On a smaller scale, parallax is
+                                also noticeable in everyday life when looking at objects from different
+                                angles, making it a crucial concept in fields like photography,
+                                navigation, and virtual reality.
+                            """.trimIndent(),
+                            textColor = Color.White
+                        )
+                    }
                     slideContainer(background = Color.White)
                     slideContainer(background = Color.Black)
                     slideContainer(
@@ -269,6 +466,9 @@ class MainActivity : ComponentActivity() {
                     slideContainer(background = Color(0xFFF40009))
                     slideContainer(background = Color.White)
                 }
+
+                //Slide 1
+                //==================================================================================
 
                 //Slide 1
                 //==================================================================================
@@ -305,7 +505,7 @@ class MainActivity : ComponentActivity() {
                         text = "Exploring Iconic Brands: Legacy, Innovation, and Influence",
                         style = themeStyles.displayMedium.bold(),
                         fontFamily = font,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
 
@@ -512,6 +712,17 @@ fun rememberMySnapFlingBehavior(
             snapAnimationSpec = spring(stiffness = Spring.StiffnessLow)
         )
     }
+}
+
+@Composable
+fun VectorImage(modifier: Modifier = Modifier, @DrawableRes drawable: Int) {
+    Image(
+        modifier = modifier
+            .scale(1.32f),
+        painter = painterResource(drawable),
+        contentScale = ContentScale.FillWidth,
+        contentDescription = null
+    )
 }
 
 @Composable
