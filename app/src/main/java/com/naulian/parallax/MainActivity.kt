@@ -143,13 +143,13 @@ class MainActivity : ComponentActivity() {
 
                 val slide0Text by remember {
                     derivedStateOf {
-                        map(offSet, 0, height, 0, 1000)
+                        map(offSet, 0, height, 0, 2000)
                     }
                 }
 
                 val slide0level10 by remember {
                     derivedStateOf {
-                        map(offSet, 0, height, 0, -200)
+                        map(offSet, 0, height, 0, 1000)
                     }
                 }
                 val slide0level9 by remember {
@@ -207,6 +207,12 @@ class MainActivity : ComponentActivity() {
 
                 //Slide 1
                 //==================================================================================
+                val slide1Text by remember {
+                    derivedStateOf {
+                        map(offSet, 1000, height, height * 2, 0)
+                    }
+                }
+
                 val slide1Alpha by remember {
                     derivedStateOf {
                         map(offSet, height * 2, height * 3, 1f, 0f)
@@ -364,7 +370,7 @@ class MainActivity : ComponentActivity() {
 
                     Text(
                         modifier = Modifier.fillMaxSize()
-                            .padding(vertical = 200.dp)
+                            .padding(vertical = 120.dp)
                             .offset {
                                 Offset(x = 0f, y = slide0Text.toFloat()).toIntOffset()
                             },
@@ -424,6 +430,8 @@ class MainActivity : ComponentActivity() {
                             },
                         drawable = R.drawable.bg_level1
                     )
+
+                    Box(modifier = Modifier.fillMaxSize().alpha(slide0Alpha).background(Color.Black))
                 }
 
                 LazyColumn(
@@ -432,6 +440,20 @@ class MainActivity : ComponentActivity() {
                 ) {
                     slideContainer(background = Color.Transparent)
                     slideContainer(background = Color.Black){
+                        Text(
+                            modifier = Modifier.fillMaxSize()
+                                .padding(vertical = 120.dp)
+                                .offset {
+                                    Offset(x = 0f, y = slide1Text.toFloat()).toIntOffset()
+                                },
+                            text = "PARALLAX",
+                            fontFamily = font,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            fontSize = 64.sp,
+                            color = Color.White
+                        )
+
                         TextContent(
                             modifier = Modifier
                                 .alpha(slide0Alpha),
