@@ -39,5 +39,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Assignment"
+rootProject.name = "Parallax"
 include(":app")

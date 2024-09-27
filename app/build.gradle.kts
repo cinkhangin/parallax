@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.naulian.compose"
+    namespace = "com.naulian.parallax"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.naulian.compose"
+        applicationId = "com.naulian.parallax"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

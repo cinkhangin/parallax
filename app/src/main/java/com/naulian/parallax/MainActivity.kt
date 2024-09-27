@@ -1,4 +1,4 @@
-package com.naulian.compose
+package com.naulian.parallax
 
 import android.app.Application
 import android.os.Build
