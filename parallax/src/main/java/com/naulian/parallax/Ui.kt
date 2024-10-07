@@ -59,19 +59,19 @@ fun rememberParallaxColumnState(
     }
 }
 
-data class ParallaxState(
+data class ParallaxScope(
     val state: LazyListState,
     val height: Int,
 )
 
 @Composable
-fun ParallaxLayout(content: @Composable ParallaxState.() -> Unit) {
+fun ParallaxLayout(content: @Composable ParallaxScope.() -> Unit) {
     MaterialTheme {
         val scrollSate = rememberParallaxColumnState()
         val heightPx = calculatedHeightPx
         val parallaxState by remember {
             mutableStateOf(
-                ParallaxState(
+                ParallaxScope(
                     state = scrollSate,
                     height = heightPx,
                 )
@@ -84,7 +84,7 @@ fun ParallaxLayout(content: @Composable ParallaxState.() -> Unit) {
 
 
 @Composable
-fun ParallaxState.ParallaxColumn(content: LazyListScope.() -> Unit) {
+fun ParallaxScope.ParallaxColumn(content: LazyListScope.() -> Unit) {
     val snappingLayout = remember(state) {
         SnapLayoutInfoProvider(state, SnapPosition.Center)
     }

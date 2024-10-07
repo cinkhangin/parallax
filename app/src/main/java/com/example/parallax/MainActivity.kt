@@ -20,9 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -45,15 +43,16 @@ import com.naulian.glow_compose.font
 import com.naulian.modify.bold
 import com.naulian.modify.themeStyles
 import com.naulian.parallax.ParallaxColumn
+import com.naulian.parallax.OffsetCalculationSpec
 import com.naulian.parallax.ParallaxLayout
-import com.naulian.parallax.calculatedHeightPx
+import com.naulian.parallax.calculateYOffset
 import com.naulian.parallax.closedLmap
 import com.naulian.parallax.half
 import com.naulian.parallax.lmap
+import com.naulian.parallax.lmapFloat
 import com.naulian.parallax.parallax
-import com.naulian.parallax.rangeTo
+import com.naulian.parallax.to
 import com.naulian.parallax.rememberCalculation
-import com.naulian.parallax.rememberParallaxColumnState
 import com.naulian.parallax.rememberScrollOffset
 import com.naulian.parallax.scale
 import com.naulian.parallax.smartLmap
@@ -81,149 +80,135 @@ class MainActivity : ComponentActivity() {
             }
 
             ParallaxLayout {
-                val offSet by rememberScrollOffset(state, height)
+                val offset by rememberScrollOffset(state, height)
                 //Slide 0
                 //==================================================================================
 
                 val slide0Text by rememberCalculation {
-                    closedLmap(offSet, 1000, height, 0, height.scale(80))
+                    closedLmap(offset, 1000, height, 0, height.scale(80))
                 }
 
-                val slide0level10 by rememberCalculation {
-                    smartLmap(offSet, 0, 0 rangeTo height.half)
-                    //lmap(offSet, 0, height, 0, height / 2)
+                //sun
+                val slide0level10 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, height.half)
                 }
 
-                val slide0level9 by rememberCalculation {
-                    lmap(offSet, 0, height, 0, -(height * 0.2f).toInt())
+                val slide0level9 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, -height.scale(20))
                 }
-                val slide0level8 by rememberCalculation {
-                    lmap(offSet, 0, height, 0, -(height * 0.3f).toInt())
-                }
-
-                val slide0level7 by rememberCalculation {
-                    lmap(offSet, 0, height, 0, -(height * 0.4f).toInt())
-                }
-                val slide0level6 by remember {
-                    derivedStateOf {
-                        lmap(offSet, 0, height, 0, -(height * 0.5f).toInt())
-                    }
-                }
-                val slide0level5 by rememberCalculation {
-                    lmap(offSet, 0, height, 0, -(height * 0.6f).toInt())
-                }
-                val slide0level4 by rememberCalculation {
-                    lmap(offSet, 0, height, 0, -(height * 0.7f).toInt())
-                }
-                val slide0level3 by rememberCalculation {
-                    lmap(offSet, 0, height, 0, -(height * 0.8f).toInt())
-                }
-                val slide0level2 by rememberCalculation {
-                    lmap(offSet, 0, height, 0, -(height * 0.9f).toInt())
+                val slide0level8 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, -height.scale(30))
                 }
 
-                val slide0level1 by rememberCalculation {
-                    lmap(offSet, 0, height, 0, -(height * 1f).toInt())
+                val slide0level7 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, -height.scale(40))
+                }
+                val slide0level6 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, -height.scale(50))
+                }
+                val slide0level5 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, -height.scale(60))
+                }
+                val slide0level4 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, -height.scale(70))
+                }
+                val slide0level3 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, -height.scale(80))
+                }
+                val slide0level2 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, -height.scale(90))
+                }
+
+                val slide0level1 by calculateYOffset {
+                    OffsetCalculationSpec(offset, 0, 0, -height)
                 }
 
                 val slide0Alpha by rememberCalculation {
-                    closedLmap(offSet, 0, height, 0f, 1f)
+                    closedLmap(offset, 0, height, 0f, 1f)
                 }
 
                 //Slide 1
                 //==================================================================================
                 val slide1Text by rememberCalculation {
-                    lmap(offSet, 1000, height, -2400, 0)
+                    lmap(offset, 1000, height, -2400, 0)
                 }
 
                 val slide1Alpha by rememberCalculation {
-                    closedLmap(offSet, height * 2, height * 3, 1f, 0f)
+                    closedLmap(offset, height * 2, height * 3, 1f, 0f)
                 }
 
                 val slide1XLeft by rememberCalculation {
-                    lmap(offSet, height * 2, height * 3, 0, -1200)
+                    lmap(offset, height * 2, height * 3, 0, -1200)
                 }
 
                 val slide1XRight by rememberCalculation {
-                    lmap(offSet, height * 2, height * 3, 0, 1200)
+                    lmap(offset, height * 2, height * 3, 0, 1200)
                 }
 
                 //Slide 2
                 //==================================================================================
-                val slide2Alpha by rememberCalculation {
-                    if (offSet <= height * 3) closedLmap(offSet, height * 2, height * 3, 0f, 1f)
-                    else closedLmap(offSet, height * 3, height * 4, 1f, 0f)
-                }
+                val slide2Alpha by rememberCalculation { lmapFloat(offset = offset, index = 2) }
 
                 val slide2YBack by rememberCalculation {
                     smartLmap(
-                        offset = offSet,
-                        index = 3,
-                        outRange = 0 rangeTo  1600,
-                        exitOutRange = -1600 rangeTo 0
+                        offset = offset,
+                        index = 2,
+                        enterValues = -1600 to 0,
+                        exitValues = 0 to 1600
                     )
-                   /* if (offSet <= height * 3) lmap(offSet, height * 2, height * 3, -1600, 0)
-                    else lmap(offSet, height * 3, height * 4, 0, 1600)*/
                 }
 
-                val slide2Scale by rememberCalculation {
-                    if (offSet <= height * 3)
-                        closedLmap(offSet, height * 2, height * 3, 0f, 1f)
-                    else closedLmap(offSet, height * 3, height * 4, 1f, 0f)
-                }
+                val slide2Scale by rememberCalculation { lmapFloat(offset = offset, index = 2) }
 
                 // Slide 3
                 //==================================================================================
-                val slide3Alpha by rememberCalculation {
-                    if (offSet <= height * 4)
-                        closedLmap(offSet, height * 3, height * 4, 0f, 1f)
-                    else closedLmap(offSet, height * 4, height * 5, 1f, 0f)
-                }
+                val slide3Alpha by rememberCalculation { lmapFloat(offset = offset, index = 3) }
 
                 val slide3Rotate by rememberCalculation {
-                    closedLmap(offSet, height * 3, height * 4, 180, 0) % 360f
+                    closedLmap(offset, height * 3, height * 4, 180, 0) % 360f
                 }
 
                 val slide3YText by rememberCalculation {
-                    if (offSet <= height * 4)
-                        lmap(offSet, height * 3, height * 4, -1600, 0)
-                    else lmap(offSet, height * 4, height * 5, 0, 1600)
+                    smartLmap(
+                        offset = offset,
+                        index = 3,
+                        enterValues = -1600 to 0,
+                        exitValues = 0 to 1600
+                    )
                 }
 
                 // Slide 4
                 //==================================================================================
-                val slide4Alpha by rememberCalculation {
-                    if (offSet <= height * 5)
-                        closedLmap(offSet, height * 4, height * 5, 0f, 1f)
-                    else closedLmap(offSet, height * 5, height * 6, 1f, 0f)
-                }
+                val slide4Alpha by rememberCalculation { lmapFloat(offset = offset, index = 4) }
 
                 val slide4YBack by rememberCalculation {
-                    if (offSet <= height * 5)
-                        lmap(offSet, height * 4, height * 5, -1600, 0)
-                    else lmap(offSet, height * 5, height * 6, 0, 1600)
+                    smartLmap(
+                        offset = offset,
+                        index = 4,
+                        enterValues = -1600 to 0,
+                        exitValues = 0 to 1600
+                    )
                 }
 
                 val slide4XFront by rememberCalculation {
-                    lmap(offSet, height * 4, height * 6, 2000, -2000)
+                    lmap(offset, height * 4, height * 6, 2000, -2000)
                 }
 
                 // Slide 5
                 //==================================================================================
-                val slide5Alpha by rememberCalculation {
-                    if (offSet <= height * 6)
-                        closedLmap(offSet, height * 5, height * 6, 0f, 1f)
-                    else closedLmap(offSet, height * 6, height * 7, 1f, 0f)
-                }
+                val slide5Alpha by rememberCalculation { lmapFloat(offset = offset, index = 5) }
 
                 val slide5YBack by rememberCalculation {
-                    if (offSet <= height * 6)
-                        lmap(offSet, height * 5, height * 6, -1600, 0)
-                    else lmap(offSet, height * 6, height * 7, 0, 1600)
+                    smartLmap(
+                        offset = offset,
+                        index = 5,
+                        enterValues = -1600 to 0,
+                        exitValues = 0 to 1600
+                    )
                 }
 
                 val slide5YFront by rememberCalculation {
-                    lmap(offSet, height * 5, height * 6, -1000, 0)
+                    lmap(offset, height * 5, height * 6, -1000, 0)
                 }
 
                 //==================================================================================
@@ -238,26 +223,26 @@ class MainActivity : ComponentActivity() {
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level10) },
+                            .offset { slide0level10 },
                         drawable = R.drawable.bg_level10
                     )
 
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level9) },
+                            .offset { slide0level9 },
                         drawable = R.drawable.bg_level9
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level8) },
+                            .offset { slide0level8 },
                         drawable = R.drawable.bg_level8
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level7) },
+                            .offset { slide0level7 },
                         drawable = R.drawable.bg_level7
                     )
 
@@ -277,37 +262,37 @@ class MainActivity : ComponentActivity() {
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level6) },
+                            .offset { slide0level6 },
                         drawable = R.drawable.bg_level6
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level5) },
+                            .offset { slide0level5 },
                         drawable = R.drawable.bg_level5
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level4) },
+                            .offset { slide0level4 },
                         drawable = R.drawable.bg_level4
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level3) },
+                            .offset { slide0level3 },
                         drawable = R.drawable.bg_level3
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level2) },
+                            .offset { slide0level2 },
                         drawable = R.drawable.bg_level2
                     )
                     VectorImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset { yOffSet(slide0level1) },
+                            .offset { slide0level1 },
                         drawable = R.drawable.bg_level1
                     )
 
