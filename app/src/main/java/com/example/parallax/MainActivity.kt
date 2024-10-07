@@ -154,206 +154,211 @@ class MainActivity : ComponentActivity() {
                     smartClosedLmap(offset, 8, 1f into 3f)
                 }
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFEDC2A0)),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level10 },
-                        drawable = R.drawable.bg_level10
-                    )
-
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level9 },
-                        drawable = R.drawable.bg_level9
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level8 },
-                        drawable = R.drawable.bg_level8
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level7 },
-                        drawable = R.drawable.bg_level7
-                    )
-
-                    Text(
+                if (offset < height * 2) {
+                    Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(vertical = 120.dp)
-                            .offset { yOffSet(slide0Text) },
-                        text = "PARALLAX",
-                        fontFamily = font,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        fontSize = 64.sp,
-                        color = Color.White
-                    )
+                            .background(Color(0xFFEDC2A0)),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
 
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level6 },
-                        drawable = R.drawable.bg_level6
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level5 },
-                        drawable = R.drawable.bg_level5
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level4 },
-                        drawable = R.drawable.bg_level4
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level3 },
-                        drawable = R.drawable.bg_level3
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level2 },
-                        drawable = R.drawable.bg_level2
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset { slide0level1 },
-                        drawable = R.drawable.bg_level1
-                    )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level10 },
+                            drawable = R.drawable.bg_level10
+                        )
+
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level9 },
+                            drawable = R.drawable.bg_level9
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level8 },
+                            drawable = R.drawable.bg_level8
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level7 },
+                            drawable = R.drawable.bg_level7
+                        )
+
+                        Text(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(vertical = 120.dp)
+                                .offset { yOffSet(slide0Text) },
+                            text = "PARALLAX",
+                            fontFamily = font,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            fontSize = 64.sp,
+                            color = Color.White
+                        )
+
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level6 },
+                            drawable = R.drawable.bg_level6
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level5 },
+                            drawable = R.drawable.bg_level5
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level4 },
+                            drawable = R.drawable.bg_level4
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level3 },
+                            drawable = R.drawable.bg_level3
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level2 },
+                            drawable = R.drawable.bg_level2
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset { slide0level1 },
+                            drawable = R.drawable.bg_level1
+                        )
+                    }
                 }
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .offset {
-                            val y = smartClosedLmap(offset, 9, height + 500 into 0)
-                            yOffSet(y)
-                        },
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level9
-                    )
-
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level8
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset {
-                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.001f))
-                                yOffSet(y)
-                            },
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level7
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset {
-                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.01f))
-                                yOffSet(y)
-                            },
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level6
-                    )
-
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset {
-                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.1f))
-                                yOffSet(y)
-                            },
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level5
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset {
-                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.3f))
-                                yOffSet(y)
-                            },
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level4
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset {
-                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.5f))
-                                yOffSet(y)
-                            },
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level3
-                    )
-
-                    Text(
+                if (offset > height * 9) {
+                    Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(vertical = 120.dp),
-                        text = "THANK YOU",
-                        fontFamily = font,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        fontSize = 64.sp,
-                        color = Color.White
-                    )
+                            .offset {
+                                val y = smartClosedLmap(offset, 9, height + 500 into 0)
+                                yOffSet(y)
+                            },
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level9
+                        )
 
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset {
-                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.7f))
-                                yOffSet(y)
-                            },
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level2
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset {
-                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.9f))
-                                yOffSet(y)
-                            },
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level1
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset {
-                                val y = smartClosedLmap(offset, 10, 0 into -height)
-                                yOffSet(y)
-                            },
-                        contentScale = ContentScale.FillHeight,
-                        drawable = R.drawable.lc_level0
-                    )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level8
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset {
+                                    val y =
+                                        smartClosedLmap(offset, 10, 0 into -height.scale(0.001f))
+                                    yOffSet(y)
+                                },
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level7
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset {
+                                    val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.01f))
+                                    yOffSet(y)
+                                },
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level6
+                        )
+
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset {
+                                    val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.1f))
+                                    yOffSet(y)
+                                },
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level5
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset {
+                                    val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.3f))
+                                    yOffSet(y)
+                                },
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level4
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset {
+                                    val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.5f))
+                                    yOffSet(y)
+                                },
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level3
+                        )
+
+                        Text(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(vertical = 120.dp),
+                            text = "THANK YOU",
+                            fontFamily = font,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            fontSize = 64.sp,
+                            color = Color.White
+                        )
+
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset {
+                                    val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.7f))
+                                    yOffSet(y)
+                                },
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level2
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset {
+                                    val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.9f))
+                                    yOffSet(y)
+                                },
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level1
+                        )
+                        VectorImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset {
+                                    val y = smartClosedLmap(offset, 10, 0 into -height)
+                                    yOffSet(y)
+                                },
+                            contentScale = ContentScale.FillWidth,
+                            drawable = R.drawable.lc_level0
+                        )
+                    }
                 }
 
                 ParallaxColumn {
