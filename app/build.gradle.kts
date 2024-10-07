@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.naulian.anhance)
     implementation(libs.naulian.modify)
     implementation(libs.naulian.glow)
+    implementation(libs.naulian.composer)
 
     implementation(libs.kotlinx.serialization.json)
 

@@ -15,6 +15,7 @@ kotlinxSerializationJson = "1.7.0"
 material = "1.12.0"
 modify = "0.0.2-rc"
 glow = "1.7.0"
+composer = "0.0.1-alpha02"
 toolsBelt = "0.0.1-preview04"
 toolsBeltUI = "0.0.1-preview01"
 
@@ -47,6 +48,7 @@ androidx-compose-ui-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 androidx-compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
 naulian-anhance = { module = "com.naulian:anhance", version.ref = "anhance" }
+naulian-composer = { module = "com.naulian:composer", version.ref = "composer" }
 naulian-glow = { module = "com.naulian:glow", version.ref = "glow" }
 google-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
 google-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltVersion" }

@@ -11,13 +11,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,40 +35,41 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.naulian.composer.ui.ComposerUI
 import com.naulian.glow_compose.font
-import com.naulian.modify.bold
-import com.naulian.modify.themeStyles
-import com.naulian.parallax.ParallaxColumn
 import com.naulian.parallax.OffsetCalculationSpec
+import com.naulian.parallax.ParallaxColumn
 import com.naulian.parallax.ParallaxLayout
 import com.naulian.parallax.calculateYOffset
 import com.naulian.parallax.closedLmap
 import com.naulian.parallax.half
+import com.naulian.parallax.into
 import com.naulian.parallax.lmap
-import com.naulian.parallax.lmapFloat
 import com.naulian.parallax.parallax
-import com.naulian.parallax.to
 import com.naulian.parallax.rememberCalculation
 import com.naulian.parallax.rememberScrollOffset
 import com.naulian.parallax.scale
+import com.naulian.parallax.smartClosedLmap
 import com.naulian.parallax.smartLmap
 import com.naulian.parallax.xOffSet
 import com.naulian.parallax.yOffSet
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
+import kotlin.math.roundToInt
 
 @HiltAndroidApp
 class App : Application()
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -123,95 +127,32 @@ class MainActivity : ComponentActivity() {
                     OffsetCalculationSpec(offset, 0, 0, -height)
                 }
 
-                val slide0Alpha by rememberCalculation {
+                val doorAlpha by rememberCalculation {
                     closedLmap(offset, 0, height, 0f, 1f)
                 }
 
-                //Slide 1
-                //==================================================================================
-                val slide1Text by rememberCalculation {
-                    lmap(offset, 1000, height, -2400, 0)
-                }
-
                 val slide1Alpha by rememberCalculation {
-                    closedLmap(offset, height * 2, height * 3, 1f, 0f)
+                    closedLmap(offset, height - 10, height, 1f, 0f)
                 }
 
-                val slide1XLeft by rememberCalculation {
-                    lmap(offset, height * 2, height * 3, 0, -1200)
+                val welcomeAlpha by rememberCalculation {
+                    smartClosedLmap(offset, 0, 0f into 1f, 1f into 0f)
                 }
 
-                val slide1XRight by rememberCalculation {
-                    lmap(offset, height * 2, height * 3, 0, 1200)
+                val alphaExample by rememberCalculation {
+                    smartClosedLmap(offset, 6, 1f into 0f)
                 }
 
-                //Slide 2
-                //==================================================================================
-                val slide2Alpha by rememberCalculation { lmapFloat(offset = offset, index = 2) }
-
-                val slide2YBack by rememberCalculation {
-                    smartLmap(
-                        offset = offset,
-                        index = 2,
-                        enterValues = -1600 to 0,
-                        exitValues = 0 to 1600
-                    )
+                val rotateExample by rememberCalculation {
+                    smartClosedLmap(offset, 7, 0 into 1000) % 360f
                 }
 
-                val slide2Scale by rememberCalculation { lmapFloat(offset = offset, index = 2) }
-
-                // Slide 3
-                //==================================================================================
-                val slide3Alpha by rememberCalculation { lmapFloat(offset = offset, index = 3) }
-
-                val slide3Rotate by rememberCalculation {
-                    closedLmap(offset, height * 3, height * 4, 180, 0) % 360f
+                val scaleXExample by rememberCalculation {
+                    smartClosedLmap(offset, 8, 1f into 2f)
                 }
-
-                val slide3YText by rememberCalculation {
-                    smartLmap(
-                        offset = offset,
-                        index = 3,
-                        enterValues = -1600 to 0,
-                        exitValues = 0 to 1600
-                    )
+                val scaleYExample by rememberCalculation {
+                    smartClosedLmap(offset, 8, 1f into 3f)
                 }
-
-                // Slide 4
-                //==================================================================================
-                val slide4Alpha by rememberCalculation { lmapFloat(offset = offset, index = 4) }
-
-                val slide4YBack by rememberCalculation {
-                    smartLmap(
-                        offset = offset,
-                        index = 4,
-                        enterValues = -1600 to 0,
-                        exitValues = 0 to 1600
-                    )
-                }
-
-                val slide4XFront by rememberCalculation {
-                    lmap(offset, height * 4, height * 6, 2000, -2000)
-                }
-
-                // Slide 5
-                //==================================================================================
-                val slide5Alpha by rememberCalculation { lmapFloat(offset = offset, index = 5) }
-
-                val slide5YBack by rememberCalculation {
-                    smartLmap(
-                        offset = offset,
-                        index = 5,
-                        enterValues = -1600 to 0,
-                        exitValues = 0 to 1600
-                    )
-                }
-
-                val slide5YFront by rememberCalculation {
-                    lmap(offset, height * 5, height * 6, -1000, 0)
-                }
-
-                //==================================================================================
 
                 Box(
                     modifier = Modifier
@@ -295,271 +236,517 @@ class MainActivity : ComponentActivity() {
                             .offset { slide0level1 },
                         drawable = R.drawable.bg_level1
                     )
+                }
 
-                    Box(
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .offset {
+                            val y = smartClosedLmap(offset, 9, height + 500 into 0)
+                            yOffSet(y)
+                        },
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level9
+                    )
+
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level8
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.001f))
+                                yOffSet(y)
+                            },
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level7
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.01f))
+                                yOffSet(y)
+                            },
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level6
+                    )
+
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.1f))
+                                yOffSet(y)
+                            },
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level5
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.3f))
+                                yOffSet(y)
+                            },
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level4
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.5f))
+                                yOffSet(y)
+                            },
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level3
+                    )
+
+                    Text(
                         modifier = Modifier
                             .fillMaxSize()
-                            .alpha(slide0Alpha)
-                            .background(Color.Black)
+                            .padding(vertical = 120.dp),
+                        text = "THANK YOU",
+                        fontFamily = font,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        fontSize = 64.sp,
+                        color = Color.White
+                    )
+
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.7f))
+                                yOffSet(y)
+                            },
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level2
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                val y = smartClosedLmap(offset, 10, 0 into -height.scale(0.9f))
+                                yOffSet(y)
+                            },
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level1
+                    )
+                    VectorImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset {
+                                val y = smartClosedLmap(offset, 10, 0 into -height)
+                                yOffSet(y)
+                            },
+                        contentScale = ContentScale.FillHeight,
+                        drawable = R.drawable.lc_level0
                     )
                 }
 
                 ParallaxColumn {
-                    parallax(background = Color.Transparent)
-                    parallax(background = Color.Black) {
-                        Text(
+                    parallax()
+                    parallax(background = Color.White) {
+                        Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(vertical = 120.dp)
-                                .offset { yOffSet(slide1Text) },
-                            text = "PARALLAX",
-                            fontFamily = font,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            fontSize = 64.sp,
-                            color = Color.White
-                        )
-
-                        TextContent(
-                            modifier = Modifier
-                                .alpha(slide0Alpha),
-                            content = """
-                                Parallax is the apparent shift in the position of an object when
-                                observed from different viewpoints. This effect occurs because an
-                                object's position appears to change relative to its background depending
-                                on the observer's angle or position. Parallax is often used in astronomy
-                                to measure the distance of stars from Earth by observing their movement
-                                against more distant celestial bodies. On a smaller scale, parallax is
-                                also noticeable in everyday life when looking at objects from different
-                                angles, making it a crucial concept in fields like photography,
-                                navigation, and virtual reality.
-                            """.trimIndent(),
-                            textColor = Color.White
-                        )
-                    }
-                    parallax(background = Color.White)
-                    parallax(background = Color.Black) {
-                        TextContent(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .alpha(slide2Alpha)
-                                .offset { yOffSet(slide2YBack) },
-                            content = """
-                                Apple Inc., founded in 1976 by Steve Jobs, Steve Wozniak, and Ronald Wayne,
-                                is a global technology company known for its innovative products and
-                                design-centric approach. With the launch of the Macintosh in 1984 and the
-                                iPhone in 2007, Apple revolutionized personal computing and mobile
-                                technology. The brand's emphasis on user experience, sleek aesthetics, and
-                                cutting-edge features has created a loyal customer base and a strong global
-                                presence. Apple’s ecosystem, including products like the iPad, Apple Watch,
-                                and services such as the App Store and iCloud, continues to shape the
-                                technology landscape, positioning the company as a leader in innovation and
-                                consumer electronics.
-                            """.trimIndent(),
-                            textColor = Color.White
-                        )
-                    }
-                    parallax(
-                        background = Color.White,
-                        contentAlignment = Alignment.TopCenter
-                    ) {
-                        TextContent(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .alpha(slide3Alpha)
-                                .offset { yOffSet(y = slide3YText) },
-                            content = """
-                                Nike, founded in 1964 by Bill Bowerman and Phil Knight as Blue Ribbon
-                                Sports, has grown into a global leader in athletic footwear, apparel, and
-                                equipment. Renamed Nike in 1971, after the Greek goddess of victory, the
-                                brand is known for its "Just Do It" slogan and iconic Swoosh logo. Nike's
-                                success is built on its innovative products, cutting-edge technology in
-                                sportswear, and strong athlete endorsements, including partnerships with
-                                legendary athletes like Michael Jordan and Serena Williams. Beyond products,
-                                Nike has transformed the sports industry by promoting empowerment,
-                                self-expression, and a culture of fitness, making it a cultural and athletic
-                                icon worldwide.
-                            """.trimIndent()
-                        )
-
-                        Image(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 40.dp)
-                                .size(240.dp)
-                                .rotate(slide3Rotate),
-                            painter = painterResource(R.drawable.ic_nike),
-                            contentDescription = null
-                        )
-                    }
-                    parallax(background = Color(0xFFF40009)) {
-                        TextContent(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .alpha(slide4Alpha)
-                                .offset { yOffSet(slide4YBack) },
-                            content = """
-                                Coca-Cola, created in 1886 by pharmacist Dr. John Stith Pemberton, is one
-                                of the world’s most iconic and recognizable beverage brands. Originally
-                                marketed as a medicinal tonic, Coca-Cola quickly became a popular soft
-                                drink, thanks to its unique flavor and innovative marketing strategies. Over
-                                the decades, the brand has solidified its global presence through memorable
-                                advertising campaigns, such as the "Share a Coke" initiative and its
-                                long-standing association with happiness and refreshment. With its
-                                distinctive red-and-white logo and classic glass bottle, Coca-Cola has
-                                transcended the beverage industry, becoming a symbol of American culture and
-                                a leader in global marketing.
-                            """.trimIndent(),
-                            textColor = Color.White
+                                .alpha(slide1Alpha)
+                                .background(Color.Black)
                         )
                     }
                     parallax(background = Color.White) {
-                        TextContent(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .alpha(slide5Alpha)
-                                .offset { yOffSet(slide5YBack) },
-                            content = """
-                                Tesla, founded in 2003 by engineers Martin Eberhard and Marc Tarpenning,
-                                with Elon Musk joining shortly after, is a trailblazer in the electric
-                                vehicle (EV) industry and renewable energy solutions. Known for its mission
-                                to accelerate the world's transition to sustainable energy, Tesla has
-                                revolutionized the automotive sector with cutting-edge electric cars like
-                                the Model S, Model 3, and Model X, offering high performance, long range,
-                                and sleek design. Tesla's innovative technologies, such as its Autopilot
-                                self-driving system and battery advancements, have set new standards for
-                                the industry. Beyond vehicles, Tesla also focuses on energy storage and
-                                solar products, making it a key player in the shift toward sustainability.
+                        ComposerUI(
+                            modifier = Modifier.padding(16.dp),
+                            source = """
+                                #3 How to create a Parallax Effect
+                                *x you need a Scrollable UI
+                                {
+                                .kt
+                                LazyColumn {}
+                                }
+                                *x you need to know the scroll position
+                                {
+                                .kt
+                                val state = rememberLazyListState()
+                                val position by remember {
+                                    derivedStateOf {
+                                        val itemIndex = state.firstVisibleItemIndex
+                                        val itemOffset = state.firstVisibleItemScrollOffset
+                                        (itemIndex * itemHeight) + itemOffset
+                                    }
+                                }
+                                }
                             """.trimIndent()
                         )
                     }
+
+                    parallax(background = Color.White, contentAlignment = Alignment.Center) {
+                        Box(
+                            modifier = Modifier
+                                .size(100.dp)
+                                .background(Color.Red)
+                        )
+
+                        Box(modifier = Modifier
+                            .size(200.dp)
+                            .offset {
+                                val y = smartLmap(offset, 3, 500 into 0, 0 into 2000)
+                                yOffSet(y)
+                            }
+                            .background(Color.Green)
+                        )
+
+                        Box(modifier = Modifier
+                            .size(300.dp)
+                            .offset {
+                                val y = smartLmap(offset, 3, 1000 into 0, 0 into 3000)
+                                yOffSet(y)
+                            }
+                            .background(Color.Blue)
+                        )
+                    }
+                    parallax(background = Color.White) {
+                        val a = SliderState(value = 0f, steps = 100, valueRange = 0f..1f)
+                        val b by rememberCalculation {
+                            (a.value * 100).roundToInt()
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Slider(modifier = Modifier.padding(24.dp), state = a)
+
+                            Box(modifier = Modifier
+                                .size(50.dp)
+                                .offset {
+                                    val x = lmap(b, 0, 100, 0, 500)
+                                    xOffSet(x)
+                                }
+                                .background(Color.Green)
+                            )
+
+                            Box(modifier = Modifier
+                                .size(50.dp)
+                                .offset {
+                                    val x = lmap(b, 0, 100, 0, 300)
+                                    xOffSet(x)
+                                }
+                                .background(Color.Blue)
+                            )
+
+                            ComposerUI(
+                                modifier = Modifier.padding(16.dp),
+                                source = """
+                                    {
+                                    .kt
+                                    /*
+                                           (yMax - yMin) * (x - xMin)
+                                    yMin + --------------------------
+                                                   xMax - xMin
+                                    */
+                                    //Linear Mapping
+                                    fun linearMap(x: Int, xMin: Int, xMax: Int, yMin: Float, yMax: Float): Float {
+                                        return yMin + (yMax - yMin) * (x - xMin) / (xMax - xMin)
+                                    }
+                                    }
+                            
+                                """.trimIndent()
+                            )
+                        }
+                    }
+
+                    parallax(background = Color.White) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            ComposerUI(
+                                source = """
+                                #3 Offset
+                            """.trimIndent()
+                            )
+
+                            ComposerUI(
+                                modifier = Modifier.padding(16.dp),
+                                source = """
+                          
+                                    {
+                                    .kt
+                                    //Example
+                                    Box(modifier = Modifier
+                                        .size(50.dp)
+                                        .offset {
+                                            val x = lmap(offset, 0, 1000, 0, 300)
+                                            IntOffset(x = x, y = 0)
+                                        }
+                                        .background(Color.Blue)
+                            )
+                                    }
+                            
+                                """.trimIndent()
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(modifier = Modifier
+                                .size(50.dp)
+                                .offset {
+                                    val x = smartClosedLmap(offset, 5, 0 into 500)
+                                    xOffSet(x)
+                                }
+                                .background(Color.Yellow)
+                            )
+
+                            Box(modifier = Modifier
+                                .size(50.dp)
+                                .offset {
+                                    val y = smartClosedLmap(offset, 5, 0 into 500)
+                                    yOffSet(y)
+                                }
+                                .background(Color.Green)
+                            )
+                            Box(modifier = Modifier
+                                .size(50.dp)
+                                .offset {
+                                    val x = smartClosedLmap(offset, 5, 0 into -500)
+                                    xOffSet(x)
+                                }
+                                .background(Color.Red)
+                            )
+                            Box(modifier = Modifier
+                                .size(50.dp)
+                                .offset {
+                                    val y = smartClosedLmap(offset, 5, 0 into -500)
+                                    yOffSet(y)
+                                }
+                                .background(Color.Blue)
+                            )
+                        }
+                    }
+
+                    parallax(background = Color.White) {
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            ComposerUI(
+                                source = """
+                                #3 Alpha
+                            """.trimIndent()
+                            )
+
+                            ComposerUI(
+                                modifier = Modifier.padding(16.dp),
+                                source = """
+                                    {
+                                    .kt
+                                    //Example
+                                    val alpha = lmap(offset, 0, 1000, 0f, 1f)
+                                    Box(modifier = Modifier
+                                        .size(50.dp)
+                                        .alpha(alpha)
+                                        .background(Color.Blue)
+                                    )
+                                    }
+                                """.trimIndent()
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.BottomCenter
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(24.dp)
+                                    .size(50.dp)
+                                    .alpha(alphaExample)
+                                    .background(Color.Blue)
+                            )
+                        }
+                    }
+
+                    parallax(background = Color.White) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            ComposerUI(
+                                source = """
+                                #3 Rotate
+                            """.trimIndent()
+                            )
+
+                            ComposerUI(
+                                modifier = Modifier.padding(16.dp),
+                                source = """
+                                    {
+                                    .kt
+                                    //Example
+                                    val degree = lmap(offset, 0, 1000, 0, 360)
+                                    Box(modifier = Modifier
+                                        .size(50.dp)
+                                        .rotate(degree)
+                                        .background(Color.Blue)
+                                    )
+                                    }
+                                """.trimIndent()
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .rotate(rotateExample)
+                                    .background(Color.Blue)
+                            )
+                        }
+                    }
+
+                    parallax(background = Color.White) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            ComposerUI(
+                                source = """
+                                #3 Scale
+                            """.trimIndent()
+                            )
+
+                            ComposerUI(
+                                modifier = Modifier.padding(16.dp),
+                                source = """
+                                    {
+                                    .kt
+                                    //Example
+                                    val x = lmap(offset, 0, 1000, 1f, 2f)
+                                    val y = lmap(offset, 0, 1000, 1f, 3f)
+                                    Box(modifier = Modifier
+                                        .size(50.dp)
+                                        .scale(scaleX = x, scaleY = y)
+                                        .background(Color.Blue)
+                                    )
+                                    }
+                                """.trimIndent()
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .scale(scaleX = scaleXExample, scaleY = scaleYExample)
+                                    .background(Color.Blue)
+                            )
+                        }
+                    }
+
+                    parallax(background = Color.White, contentAlignment = Alignment.Center) {
+                        ComposerUI(
+                            modifier = Modifier.padding(16.dp),
+                            source = """
+                                "The only Limit is your imagination"
+                                
+                                #1 Q \& A
+                            """.trimIndent()
+                        )
+                    }
+
+                    parallax()
+                    parallax(background = Color(0xFF1F1515))
                 }
 
-                //Slide 1
-                //==================================================================================
 
-                //Slide 1
-                //==================================================================================
-                TextContent(
+                //door
+                Row(
                     modifier = Modifier
-                        .alpha(slide1Alpha)
-                        .offset { xOffSet(slide1XRight) },
-                    content = """
-                            In a world saturated with products and services, certain brands stand
-                            out not just for their quality, but for their ability to connect with
-                            consumers on a deeper level. These brands have successfully created
-                            identities that resonate with their audience, influencing not just
-                            purchasing decisions but also lifestyles. Today, we will explore four
-                            iconic brands that have made a significant impact in their respective
-                            industries: Apple, Nike, Coca-Cola, and Tesla. We will delve into their
-                            histories, brand strategies, and the ways they have shaped consumer
-                            culture.
-                        """.trimIndent(),
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(320.dp)
-                        .padding(24.dp)
-                        .offset { xOffSet(slide1XLeft) },
-                    contentAlignment = Alignment.Center
+                        .fillMaxSize()
                 ) {
-                    Text(
-                        text = "Exploring Iconic Brands: Legacy, Innovation, and Influence",
-                        style = themeStyles.displayMedium.bold(),
-                        fontFamily = font,
-                        overflow = TextOverflow.Ellipsis,
+                    Box(modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(0.5f)
+                        .offset {
+                            val x = smartClosedLmap(offset, 1, 0 into -1000)
+                            xOffSet(x)
+                        }
+                        .alpha(doorAlpha)
+                        .background(Color.Black)
+                    )
+                    Box(modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(0.5f)
+                        .offset {
+                            val x = smartClosedLmap(offset, 1, 0 into 1000)
+                            xOffSet(x)
+                        }
+                        .alpha(doorAlpha)
+                        .background(Color.Black)
                     )
                 }
 
-
-                // Slide 2
-                //==================================================================================
-
-                LogoContent(
-                    logo = R.drawable.ic_apple,
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .scale(slide2Scale),
-                )
-
-                // Slide 3
-                //==================================================================================
-
-
-                // Slide 4
-                //==================================================================================
-
-                LogoContent(
-                    logo = R.drawable.ic_cocacola,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset { xOffSet(slide4XFront) },
-                )
-
-                // Slide 5
-                //==================================================================================
-                LogoContent(
-                    logo = R.drawable.ic_tesla,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset { yOffSet(slide5YFront) },
-                )
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        modifier = Modifier.alpha(welcomeAlpha),
+                        text = "Welcome",
+                        color = Color.White,
+                        fontSize = 32.sp
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun TextContent(
+fun VectorImage(
     modifier: Modifier = Modifier,
-    content: String,
-    textColor: Color = MaterialTheme.colorScheme.onBackground,
+    @DrawableRes drawable: Int,
+    contentScale: ContentScale = ContentScale.FillWidth
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        Box(modifier = Modifier.height(320.dp))
-        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.BottomStart) {
-            Text(
-                modifier = Modifier
-                    .padding(24.dp),
-                text = content.asParagraph,
-                style = themeStyles.bodyLarge,
-                fontFamily = font,
-                color = textColor,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
-}
-
-@Composable
-fun LogoContent(modifier: Modifier = Modifier, @DrawableRes logo: Int) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            modifier = Modifier
-                .size(320.dp)
-                .padding(64.dp),
-            painter = painterResource(logo),
-            contentDescription = null
-        )
-    }
-}
-
-val String.asParagraph get() = trimIndent().replace("\n", " ")
-
-@Composable
-fun VectorImage(modifier: Modifier = Modifier, @DrawableRes drawable: Int) {
     Image(
         modifier = modifier
             .scale(1.32f),
         painter = painterResource(drawable),
-        contentScale = ContentScale.FillWidth,
+        contentScale = contentScale,
         contentDescription = null
     )
 }

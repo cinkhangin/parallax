@@ -19,7 +19,7 @@ data class ValueRange<N : Number>(
     val max: N,
 )
 
-infix fun <N : Number> N.to(other: N) = ValueRange(this, other)
+infix fun <N : Number> N.into(other: N) = ValueRange(this, other)
 
 fun ParallaxScope.smartLmap(
     offset: Int,
@@ -47,8 +47,8 @@ fun ParallaxScope.lmapFloat(
     return smartClosedLmap(
         offset = offset,
         index = index,
-        enterValues = if (animateEnter) 0f to 1f else null,
-        exitValues = if (animateExit) 1f to 0f else null
+        enterValues = if (animateEnter) 0f into 1f else null,
+        exitValues = if (animateExit) 1f into 0f else null
     )
 }
 
@@ -72,6 +72,28 @@ fun ParallaxScope.smartClosedLmap(
     }
 
     return 0f
+}
+
+fun ParallaxScope.smartClosedLmap(
+    offset: Int,
+    index: Int,
+    enterValues: ValueRange<Int>?,
+    exitValues: ValueRange<Int>? = null,
+): Int {
+
+    val exitXMin = (index * height) + height
+    if (exitValues != null && offset > exitXMin) {
+        val xMax = ((index + 1) * height) + height // when 0 -> height2 when 1 -> height3
+        return closedLmap(offset, exitXMin, xMax, exitValues.min, exitValues.max)
+    }
+
+    if (enterValues != null) {
+        val xMin = (index * height) // when 0 -> 0 when 1 -> height
+        val xMax = exitXMin // when 0 -> height when 1 -> height2
+        return closedLmap(offset, xMin, xMax, enterValues.min, enterValues.max)
+    }
+
+    return 0
 }
 
 
@@ -117,7 +139,7 @@ fun ParallaxScope.calculateYOffset(dataProvider: () -> OffsetCalculationSpec) = 
         val y = smartLmap(
             data.offset,
             data.index,
-            data.animateFrom to data.animateTo
+            data.animateFrom into data.animateTo
         )
         yOffSet(y)
     }
