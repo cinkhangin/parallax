@@ -8,7 +8,7 @@ Add the dependency to your app's build.gradle file:
 
 ```gradle
 dependencies {
-    implementation 'com.yourusername:parallax:0.1.0-alpha01'
+    implementation("com.naulian:parallax:0.1.0-alpha01")
 }
 ```
 
@@ -135,12 +135,14 @@ Each ParallaxItem's content lambda receives a progress object with:
 
 ## Helper Extensions
 
-### slideY
+### slide
 
 ```kotlin
-Modifier.slideY(progress, startY, endY)
+Modifier.slideY(progress, from, to)
+Modifier.slideX(progress, from, to)
+Modifier.slide(progress, fromX, toX, fromY, toY)
 ```
-Slides an element along the Y-axis based on progress value.
+Slides an element along the XY-axis based on progress value.
 
 ### scale
 
