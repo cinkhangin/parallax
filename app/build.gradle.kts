@@ -92,7 +92,5 @@ dependencies {
     ksp(libs.google.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation(libs.codigo.toolsbelt)
-    implementation(libs.codigo.toolsbeltui)
     implementation(project(":parallax"))
 }

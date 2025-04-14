@@ -1,27 +1,25 @@
 [versions]
-activityCompose = "1.9.2"
-anhance = "2024.3.0"
+activityCompose = "1.10.1"
+anhance = "2025.4.0"
 appcompat = "1.7.0"
-composeBom = "2024.09.02"
-constraintlayoutCompose = "1.0.1"
-coreKtx = "1.13.1"
+composeBom = "2025.04.00"
+constraintlayoutCompose = "1.1.1"
+coreKtx = "1.16.0"
 coreSplashscreen = "1.0.1"
 espressoCore = "3.6.1"
 hiltNavigationCompose = "1.2.0"
 hiltVersion = "2.51.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-kotlinxSerializationJson = "1.7.0"
+kotlinxSerializationJson = "1.8.0"
 material = "1.12.0"
-modify = "0.0.2-rc"
-glow = "1.7.0"
-toolsBelt = "0.0.1-preview04"
-toolsBeltUI = "0.0.1-preview01"
+modify = "0.1.2"
+glow = "1.8.0-alpha03"
 
 # plugin
-kotlin = "2.0.0"
-agp = "8.6.0"
-ksp = "2.0.0-1.0.22"
+kotlin = "2.1.0"
+agp = "8.9.1"
+ksp = "2.1.0-1.0.29"
 hilt = "2.51.1"
 
 
@@ -47,12 +45,9 @@ androidx-compose-ui-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 androidx-compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
 naulian-anhance = { module = "com.naulian:anhance", version.ref = "anhance" }
-naulian-glow = { module = "com.naulian:glow", version.ref = "glow" }
+naulian-glow = { module = "com.naulian:glow-compose", version.ref = "glow" }
 google-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
 google-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltVersion" }
-
-codigo-toolsbelt = { module = "co.codigo.android:tools-belt", version.ref = "toolsBelt" }
-codigo-toolsbeltui = { module = "co.codigo.android:tools-belt-ui", version.ref = "toolsBeltUI" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

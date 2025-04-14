@@ -3,6 +3,7 @@ package com.naulian.parallax
 import android.os.Build
 import android.util.DisplayMetrics
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -32,9 +33,9 @@ val calculatedHeightPx
 
 val calculatedHeightDp
     @Composable get() : Dp {
-        val context = (LocalContext.current as ComponentActivity)
+        val activity = LocalActivity.current as ComponentActivity
         val dp = with(LocalDensity.current) {
-            context.deviceHeightPx / density
+            activity.deviceHeightPx / density
         }
         return floor(dp).dp
     }
