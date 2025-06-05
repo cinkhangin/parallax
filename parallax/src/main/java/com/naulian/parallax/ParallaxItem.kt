@@ -13,7 +13,11 @@ data class ParallaxProgress(
     val enterProgress: Float,
     val exitProgress: Float,
     val scrollDownOffset: Int,
-    val scrollUpOffset: Int
+    val scrollUpOffset: Int,
+
+    val scrollProgress : Float,
+    val startOffset : Int,
+    val endOffset : Int
 )
 
 @Composable
@@ -48,7 +52,16 @@ fun ParallaxState.ParallaxItem(
                     1f
                 ),
                 scrollDownOffset = scrollOffset,
-                scrollUpOffset = maxOffset - scrollOffset
+                scrollUpOffset = maxOffset - scrollOffset,
+                scrollProgress = closedMap(
+                    scrollOffset,
+                    0,
+                    maxHeight,
+                    0f,
+                    1f
+                ),
+                startOffset = screenIndex  * height,
+                endOffset = (screenIndex + 1) * height
             )
         )
     }
@@ -71,7 +84,10 @@ fun ParallaxState.ParallaxItem(
                 enterProgress = closedMap(scrollOffset, 0, maxOffset, 0f, 1f),
                 exitProgress = closedMap(scrollOffset, maxOffset, 0, 0f, 1f),
                 scrollDownOffset = scrollOffset,
-                scrollUpOffset = maxOffset - scrollOffset
+                scrollUpOffset = maxOffset - scrollOffset,
+                scrollProgress = closedMap(scrollOffset, 0, maxHeight, 0f, 1f),
+                startOffset =0,
+                endOffset = maxHeight
             )
         )
     }

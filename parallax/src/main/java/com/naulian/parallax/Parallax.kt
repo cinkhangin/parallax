@@ -77,7 +77,8 @@ internal fun ParallaxLayout(
                         screenCount = screenCount,
                         state = scrollSate,
                         height = heightPx,
-                        heightDp = heightDp
+                        heightDp = heightDp,
+                        maxHeight = heightPx * screenCount
                     )
                 )
             }

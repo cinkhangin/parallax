@@ -12,10 +12,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,130 +53,138 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             hideSystemBars()
-
-            Parallax(
-                screenCount = 2,
-                modifier = Modifier.fillMaxWidth()
-                    .fillMaxHeight(0.5f)
-            ) {
-                ParallaxItem(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFEDC2A0)),
-                    screenIndex = 0,
-                    contentAlignment = Alignment.BottomCenter
-                ) { progress ->
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, height.half),
-                        drawable = R.drawable.bg_level10
-                    )
-
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, -(height.scale(20))),
-                        drawable = R.drawable.bg_level9
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, -(height.scale(30))),
-                        drawable = R.drawable.bg_level8
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, -(height.scale(40))),
-                        drawable = R.drawable.bg_level7
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 120.dp)
-                            .offset {
-                                yOffSet(
-                                    y = closedMap(
-                                        progress.exitProgress,
-                                        0.4f,
-                                        1f,
-                                        0f,
-                                        height.scale(80).toFloat()
-                                    ).toInt()
-                                )
-                            },
-                        text = "PARALLAX",
-                        fontFamily = font,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        fontSize = 64.sp,
-                        color = Color.White
-                    )
-
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, -(height.scale(50))),
-                        drawable = R.drawable.bg_level6
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, -(height.scale(60))),
-                        drawable = R.drawable.bg_level5
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, -(height.scale(70))),
-                        drawable = R.drawable.bg_level4
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, -(height.scale(80))),
-                        drawable = R.drawable.bg_level3
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, -(height.scale(90))),
-                        drawable = R.drawable.bg_level2
-                    )
-                    VectorImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .slideY(progress.exitProgress, 0, -height),
-                        drawable = R.drawable.bg_level1
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .slideY(progress.exitProgress, height, 0)
-                            .background(Color.Black)
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .alpha(progress.exitProgress)
-                            .background(Color.Black)
-                    )
-                }
-
-                ParallaxItem(screenIndex = 1) { progress ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .offset { yOffsetFrom(progress.enterProgress, height, 0) }
-                            .background(Color.Black)
-                    )
-                }
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                ParallaxExample()
             }
         }
     }
 }
 
+
+@Composable
+fun ParallaxExample(modifier: Modifier = Modifier) {
+    Parallax(
+        screenCount = 2,
+        modifier = modifier
+            .fillMaxWidth(0.5f)
+            .fillMaxHeight(0.5f)
+            .clip(CircleShape)
+    ) {
+        ParallaxItem(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFEDC2A0)),
+            screenIndex = 0,
+            contentAlignment = Alignment.BottomCenter
+        ) { progress ->
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, height.half),
+                drawable = R.drawable.bg_level10
+            )
+
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, -(height.scale(20))),
+                drawable = R.drawable.bg_level9
+            )
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, -(height.scale(30))),
+                drawable = R.drawable.bg_level8
+            )
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, -(height.scale(40))),
+                drawable = R.drawable.bg_level7
+            )
+
+            Text(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 120.dp)
+                    .offset {
+                        yOffSet(
+                            y = closedMap(
+                                progress.exitProgress,
+                                0.4f,
+                                1f,
+                                0f,
+                                height.scale(80).toFloat()
+                            ).toInt()
+                        )
+                    },
+                text = "PARALLAX",
+                fontFamily = font,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                fontSize = 40.sp,
+                color = Color.White
+            )
+
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, -(height.scale(50))),
+                drawable = R.drawable.bg_level6
+            )
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, -(height.scale(60))),
+                drawable = R.drawable.bg_level5
+            )
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, -(height.scale(70))),
+                drawable = R.drawable.bg_level4
+            )
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, -(height.scale(80))),
+                drawable = R.drawable.bg_level3
+            )
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, -(height.scale(90))),
+                drawable = R.drawable.bg_level2
+            )
+            VectorImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .slideY(progress.exitProgress, 0, -height),
+                drawable = R.drawable.bg_level1
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .slideY(progress.exitProgress, height, 0)
+                    .background(Color.Black)
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(progress.exitProgress)
+                    .background(Color.Black)
+            )
+        }
+
+        ParallaxItem(screenIndex = 1) { progress ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .offset { yOffsetFrom(progress.enterProgress, height, 0) }
+                    .background(Color.Black)
+            )
+        }
+    }
+}

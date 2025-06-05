@@ -31,7 +31,8 @@ data class ParallaxState(
     val screenCount : Int,
     val state: LazyListState,
     val height: Int, //pixel
-    val heightDp : Dp
+    val heightDp : Dp,
+    val maxHeight : Int
 )
 
 @Composable
