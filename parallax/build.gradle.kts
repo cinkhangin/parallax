@@ -84,7 +84,7 @@ mavenPublishing {
     coordinates(
         groupId = "com.naulian",
         artifactId = "parallax",
-        version = "0.1.0-alpha01"
+        version = "0.1.0-beta01"
     )
     //./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
 

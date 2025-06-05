@@ -10,59 +10,79 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 
 
 @Composable
 fun Parallax(
     screenCount: Int,
-    scrollItemContent : LazyListScope.(ParallaxState) -> Unit = {state ->
+    modifier: Modifier = Modifier,
+    scrollItemContent: LazyListScope.(ParallaxState) -> Unit = { state ->
         items(screenCount) {
-            Box(modifier = Modifier.fillMaxWidth().height(state.heightDp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(state.heightDp)
+            )
         }
     },
     content: @Composable ParallaxState.() -> Unit
 ) {
-    ParallaxLayout(screenCount = screenCount) {
+    ParallaxLayout(
+        screenCount = screenCount,
+        modifier = modifier
+    ) {
         val snappingLayout = remember(state) {
             SnapLayoutInfoProvider(state, SnapPosition.Center)
         }
         val snapFlingBehavior = rememberParallaxFlingBehavior(snappingLayout)
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            content()
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                state = state,
-                flingBehavior = snapFlingBehavior
-            ) {
-                scrollItemContent(this@ParallaxLayout)
-            }
+        content()
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            state = state,
+            flingBehavior = snapFlingBehavior
+        ) {
+            scrollItemContent(this@ParallaxLayout)
         }
     }
 }
 
 @Composable
-fun ParallaxLayout(screenCount : Int, content: @Composable ParallaxState.() -> Unit) {
-    val scrollSate = rememberParallaxColumnState()
+internal fun ParallaxLayout(
+    screenCount: Int,
+    modifier: Modifier = Modifier,
+    content: @Composable ParallaxState.() -> Unit
+) {
+    var heightPx by remember { mutableIntStateOf(0) }
+    val heightDp = with(LocalDensity.current) { heightPx.toDp() }
 
-    val heightPx = calculatedHeightPx
-    val heightDp = calculatedHeightDp
+    Box(
+        modifier = modifier.onGloballyPositioned { coordinates ->
+            heightPx = coordinates.size.height
+        }
+    ) {
+        if (heightPx > 0) {
+            val scrollSate = rememberParallaxColumnState()
+            val parallaxState by remember {
+                mutableStateOf(
+                    ParallaxState(
+                        screenCount = screenCount,
+                        state = scrollSate,
+                        height = heightPx,
+                        heightDp = heightDp
+                    )
+                )
+            }
 
-    val parallaxState by remember {
-        mutableStateOf(
-            ParallaxState(
-                screenCount = screenCount,
-                state = scrollSate,
-                height = heightPx,
-                heightDp = heightDp
-            )
-        )
+            parallaxState.content()
+        }
     }
-
-    parallaxState.content()
 }

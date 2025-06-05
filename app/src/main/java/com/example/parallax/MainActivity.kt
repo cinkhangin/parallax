@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -25,6 +26,7 @@ import com.naulian.glow_compose.font
 import com.naulian.parallax.Parallax
 import com.naulian.parallax.ParallaxItem
 import com.naulian.parallax.VectorImage
+import com.naulian.parallax.calculatedHeightDp
 import com.naulian.parallax.closedMap
 import com.naulian.parallax.half
 import com.naulian.parallax.hideSystemBars
@@ -49,7 +51,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             hideSystemBars()
 
-            Parallax(screenCount = 2) {
+            Parallax(
+                screenCount = 2,
+                modifier = Modifier.fillMaxWidth()
+                    .fillMaxHeight(0.5f)
+            ) {
                 ParallaxItem(
                     modifier = Modifier
                         .fillMaxSize()
