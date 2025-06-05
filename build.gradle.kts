@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.google.hilt) apply false
     alias(libs.plugins.jetbrains.compose) apply false
     alias(libs.plugins.android.library) apply false
+    id("com.vanniktech.maven.publish") version "0.32.0"
 }
