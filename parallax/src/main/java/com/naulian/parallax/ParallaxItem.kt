@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 data class ParallaxProgress(
+    val index : Int,
     val enterProgress: Float,
     val exitProgress: Float,
     val scrollDownOffset: Int,
@@ -37,6 +38,7 @@ fun ParallaxState.ParallaxItem(
     ) {
         content(
             ParallaxProgress(
+                index = screenIndex,
                 enterProgress = closedMap(
                     scrollOffset,
                     (screenIndex - 1) * height,
@@ -81,6 +83,7 @@ fun ParallaxState.ParallaxItem(
     ) {
         content(
             ParallaxProgress(
+                index = 0,
                 enterProgress = closedMap(scrollOffset, 0, maxOffset, 0f, 1f),
                 exitProgress = closedMap(scrollOffset, maxOffset, 0, 0f, 1f),
                 scrollDownOffset = scrollOffset,

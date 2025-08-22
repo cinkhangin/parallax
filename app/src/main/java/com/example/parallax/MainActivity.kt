@@ -25,11 +25,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.naulian.glow_compose.font
+import com.naulian.modify.Fonts
 import com.naulian.parallax.Parallax
 import com.naulian.parallax.ParallaxItem
 import com.naulian.parallax.VectorImage
-import com.naulian.parallax.calculatedHeightDp
 import com.naulian.parallax.closedMap
 import com.naulian.parallax.half
 import com.naulian.parallax.hideSystemBars
@@ -119,7 +118,7 @@ fun ParallaxExample(modifier: Modifier = Modifier) {
                         )
                     },
                 text = "PARALLAX",
-                fontFamily = font,
+                fontFamily = Fonts.JetBrainsMono,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 fontSize = 40.sp,
