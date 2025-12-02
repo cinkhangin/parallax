@@ -1,11 +1,10 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.android)
     alias(libs.plugins.jetbrains.compose)
-    id("com.vanniktech.maven.publish")
+    alias(libs.plugins.maven.publish)
 }
 
 android {
@@ -81,14 +80,14 @@ dependencies {
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+    publishToMavenCentral(automaticRelease = true)
 
     signAllPublications()
 
     coordinates(
         groupId = "com.naulian",
         artifactId = "parallax",
-        version = "0.2.0"
+        version = "0.2.1"
     )
     //./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
 
