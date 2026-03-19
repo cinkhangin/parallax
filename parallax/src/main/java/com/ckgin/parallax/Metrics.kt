@@ -1,11 +1,10 @@
-package com.naulian.parallax
+package com.ckgin.parallax
 
 import android.os.Build
 import android.util.DisplayMetrics
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp

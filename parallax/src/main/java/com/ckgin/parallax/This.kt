@@ -1,4 +1,4 @@
-package com.naulian.parallax
+package com.ckgin.parallax
 
 fun Int.checkIfZero() {
     if (this == 0) print("is Zero")

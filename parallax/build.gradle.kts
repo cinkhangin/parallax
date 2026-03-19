@@ -1,14 +1,11 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.android)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.maven.publish)
 }
 
 android {
-    namespace = "com.naulian.parallax"
+    namespace = "com.ckgin.parallax"
     compileSdk = 36
 
     defaultConfig {
@@ -34,18 +31,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
@@ -85,9 +70,9 @@ mavenPublishing {
     signAllPublications()
 
     coordinates(
-        groupId = "com.naulian",
+        groupId = "com.ckgin",
         artifactId = "parallax",
-        version = "0.2.1"
+        version = "1.0.0-alpha01"
     )
     //./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
 
@@ -106,8 +91,8 @@ mavenPublishing {
 
         developers {
             developer {
-                id.set("naulian")
-                name.set("Naulian")
+                id.set("ckgin")
+                name.set("Cin Khan Gin")
                 url.set("https://github.com/cinkhangin/")
             }
         }

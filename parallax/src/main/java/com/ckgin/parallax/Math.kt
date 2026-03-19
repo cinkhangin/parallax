@@ -1,4 +1,4 @@
-package com.naulian.parallax
+package com.ckgin.parallax
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf

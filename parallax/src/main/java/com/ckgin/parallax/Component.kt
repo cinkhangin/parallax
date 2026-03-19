@@ -1,4 +1,4 @@
-package com.naulian.parallax
+package com.ckgin.parallax
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

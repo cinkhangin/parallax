@@ -1,4 +1,4 @@
-package com.naulian.parallax
+package com.ckgin.parallax
 
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
 import androidx.compose.foundation.gestures.snapping.SnapPosition

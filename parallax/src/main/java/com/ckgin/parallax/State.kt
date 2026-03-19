@@ -1,4 +1,4 @@
-package com.naulian.parallax
+package com.ckgin.parallax
 
 import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.Spring

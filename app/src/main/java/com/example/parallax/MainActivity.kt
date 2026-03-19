@@ -1,5 +1,6 @@
 package com.example.parallax
 
+import android.R.attr.fontWeight
 import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,17 +26,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.naulian.modify.Fonts
-import com.naulian.parallax.Parallax
-import com.naulian.parallax.ParallaxItem
-import com.naulian.parallax.VectorImage
-import com.naulian.parallax.closedMap
-import com.naulian.parallax.half
-import com.naulian.parallax.hideSystemBars
-import com.naulian.parallax.scale
-import com.naulian.parallax.slideY
-import com.naulian.parallax.yOffSet
-import com.naulian.parallax.yOffsetFrom
+import com.ckgin.modify.Fonts
+import com.ckgin.parallax.Parallax
+import com.ckgin.parallax.ParallaxItem
+import com.ckgin.parallax.VectorImage
+import com.ckgin.parallax.closedMap
+import com.ckgin.parallax.half
+import com.ckgin.parallax.hideSystemBars
+import com.ckgin.parallax.scale
+import com.ckgin.parallax.slideY
+import com.ckgin.parallax.yOffSet
+import com.ckgin.parallax.yOffsetFrom
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 
