@@ -21,6 +21,7 @@ agp = "9.1.0"
 ksp = "2.3.3"
 hilt = "2.59.2"
 vanniktech = "0.36.0"
+animationCore = "1.10.5"
 
 
 [libraries]
@@ -48,6 +49,7 @@ naulian-anhance = { module = "com.naulian:anhance", version.ref = "anhance" }
 naulian-glow = { module = "com.naulian:glow", version.ref = "glow" }
 google-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 google-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+androidx-compose-animation-core = { group = "androidx.compose.animation", name = "animation-core", version.ref = "animationCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

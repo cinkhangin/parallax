@@ -1,12 +1,15 @@
 package com.ckgin.parallax
 
+import android.R.attr.end
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -37,7 +40,6 @@ fun Modifier.slideY(
     from: Int = 0, to: Int = 0
 ) = this.offset {
     yOffsetFrom(progress, from, to)
-
 }
 
 fun Modifier.slide(

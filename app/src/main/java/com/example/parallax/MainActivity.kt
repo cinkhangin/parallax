@@ -54,7 +54,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             hideSystemBars()
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                ParallaxExample()
+                //ParallaxExample()
+                Showcase()
             }
         }
     }

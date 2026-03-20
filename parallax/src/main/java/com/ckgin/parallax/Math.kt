@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import kotlin.math.roundToInt
 
@@ -70,7 +71,6 @@ data class ValueRange<N : Number>(
 
 infix fun <N : Number> N.rangeTo(other: N) = ValueRange(this, other)
 
-@Suppress("KotlinConstantConditions") //this bug is said to be fixed in the coming intellij update
 fun Int.scale(scalar: Float): Int {
     if (this == 0 || scalar == 0f) return 0
     if (scalar == 1f) return this
@@ -81,7 +81,6 @@ fun Int.scale(percent: Int): Int {
     return scale((percent / 100f))
 }
 
-@Suppress("KotlinConstantConditions")
 val Int.half
     get(): Int {
         if (this == 0) return 0
